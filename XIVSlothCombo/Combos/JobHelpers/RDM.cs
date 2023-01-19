@@ -74,7 +74,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
         }
 
         internal class MeleeFinisher : PvE.RDM
-        { 
+        {
             internal static bool CanUse(in uint lastComboMove, out uint actionID)
             {
                 static bool HasEffect(ushort id) => CustomComboFunctions.HasEffect(id);
@@ -89,7 +89,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
                     {
                         if ((!HasEffect(Buffs.Embolden) || GetBuffRemainingTime(Buffs.Embolden) < 10)
                             && !HasEffect(Buffs.VerfireReady)
-                            && (HasEffect(Buffs.VerstoneReady) && GetBuffRemainingTime(Buffs.VerstoneReady) >= 10)
+                            && HasEffect(Buffs.VerstoneReady) && GetBuffRemainingTime(Buffs.VerstoneReady) >= 10
                             && (blackmana - whitemana <= 18))
                         {
                             actionID = Verflare;
@@ -101,7 +101,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
                     else if (LevelChecked(Verflare))
                     {
                         if ((!HasEffect(Buffs.Embolden) || GetBuffRemainingTime(Buffs.Embolden) < 10)
-                            && (HasEffect(Buffs.VerfireReady) && GetBuffRemainingTime(Buffs.VerfireReady) >= 10)
+                            && HasEffect(Buffs.VerfireReady) && GetBuffRemainingTime(Buffs.VerfireReady) >= 10
                             && !HasEffect(Buffs.VerstoneReady)
                             && LevelChecked(Verholy)
                             && (whitemana - blackmana <= 18))
@@ -142,8 +142,8 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 static bool ActionReady(uint id) => CustomComboFunctions.ActionReady(id);
                 static bool CanSpellWeave(uint id) => CustomComboFunctions.CanSpellWeave(id);
                 static bool HasCharges(uint id) => CustomComboFunctions.HasCharges(id);
-                var distance = CustomComboFunctions.GetTargetDistance();
-                
+                float distance = CustomComboFunctions.GetTargetDistance();
+
                 uint placeOGCD = 0;
 
                 bool fleche = SingleTarget ? Config.RDM_ST_oGCD_Fleche : Config.RDM_AoE_oGCD_Fleche;
@@ -213,17 +213,13 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
         internal class RDMLucid : PvE.RDM
         {
-            internal static bool SafetoUse(in uint lastComboMove)
-            {
-                return
-                    !CustomComboFunctions.HasEffect(Buffs.Dualcast)
+            internal static bool SafetoUse(in uint lastComboMove) => !CustomComboFunctions.HasEffect(Buffs.Dualcast)
                     && lastComboMove != EnchantedRiposte
                     && lastComboMove != EnchantedZwerchhau
                     && lastComboMove != EnchantedRedoublement
                     && lastComboMove != Verflare
                     && lastComboMove != Verholy
                     && lastComboMove != Scorch; // Change abilities to Lucid Dreaming for entire weave window
-            }
         }
     }
 }
