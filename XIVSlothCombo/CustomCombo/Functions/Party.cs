@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Party;
 using XIVSlothCombo.Services;
+using StructObject = FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
 {
@@ -18,7 +19,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             try
             {
-                FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* o = slot switch
+                StructObject.GameObject* o = slot switch
                 {
                     1 => GetTarget(TargetType.Self),
                     2 => GetTarget(TargetType.P2),
