@@ -5,6 +5,7 @@ using ImGuiNET;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.Services;
 using XIVSlothCombo.Window.Functions;
+using SysGeneric = System.Collections.Generic;
 
 namespace XIVSlothCombo.Window.Tabs
 {
@@ -38,9 +39,10 @@ namespace XIVSlothCombo.Window.Tabs
                 {
                     header = "All Jobs";
                 }
+
                 if (ImGui.CollapsingHeader(header))
                 {
-                    foreach (var otherJob in groupedPresets.Keys.Where(x => x != jobName))
+                    foreach (string? otherJob in groupedPresets.Keys.Where(x => x != jobName))
                     {
                         ImGui.GetStateStorage().SetInt(ImGui.GetID(otherJob), 0);
                     }
@@ -51,26 +53,27 @@ namespace XIVSlothCombo.Window.Tabs
                 else
                 {
                     i += groupedPresets[jobName].Where(x => PluginConfiguration.IsSecret(x.Preset)).Count();
-                    foreach (var preset in groupedPresets[jobName].Where(x => PluginConfiguration.IsSecret(x.Preset)))
+                    foreach ((Combos.CustomComboPreset Preset, Attributes.CustomComboInfoAttribute Info) preset in groupedPresets[jobName].Where(x => PluginConfiguration.IsSecret(x.Preset)))
                     {
                         i += Presets.AllChildren(presetChildren[preset.Preset]);
                     }
                 }
             }
+
             ImGui.PopStyleVar();
             ImGui.EndChild();
         }
 
         private static void DrawHeadingContents(string jobName, int i)
         {
-            foreach (var (preset, info) in groupedPresets[jobName].Where(x => PluginConfiguration.IsSecret(x.Preset)))
+            foreach ((Combos.CustomComboPreset preset, Attributes.CustomComboInfoAttribute info) in groupedPresets[jobName].Where(x => PluginConfiguration.IsSecret(x.Preset)))
             {
-                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
+                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => Presets.DrawPreset(preset, info, ref i) };
 
                 if (Service.Configuration.HideConflictedCombos)
                 {
-                    var conflictOriginals = Service.Configuration.GetConflicts(preset); // Presets that are contained within a ConflictedAttribute
-                    var conflictsSource = Service.Configuration.GetAllConflicts();      // Presets with the ConflictedAttribute
+                    Combos.CustomComboPreset[] conflictOriginals = Service.Configuration.GetConflicts(preset);              // Presets that are contained within a ConflictedAttribute
+                    SysGeneric.List<Combos.CustomComboPreset> conflictsSource = Service.Configuration.GetAllConflicts();    // Presets with the ConflictedAttribute
 
                     if (!conflictsSource.Where(x => x == preset).Any() || conflictOriginals.Length == 0)
                     {
