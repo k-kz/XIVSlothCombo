@@ -61,8 +61,8 @@ namespace XIVSlothCombo.Combos.PvP
 
                             if (IsEnabled(CustomComboPreset.DRGPvP_Nastrond) && InMeleeRange())
                             {
-                                if (HasEffect(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_LOTD_HPValue)
-                                 || HasEffect(Buffs.LifeOfTheDragon) && GetBuffRemainingTime(Buffs.LifeOfTheDragon) < GetOptionValue(Config.DRGPvP_LOTD_Duration))
+                                if ((HasEffect(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_LOTD_HPValue))
+                                 || (HasEffect(Buffs.LifeOfTheDragon) && GetBuffRemainingTime(Buffs.LifeOfTheDragon) < GetOptionValue(Config.DRGPvP_LOTD_Duration)))
                                     return Nastrond;
                             }
                             if (IsEnabled(CustomComboPreset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && InMeleeRange())
@@ -70,8 +70,8 @@ namespace XIVSlothCombo.Combos.PvP
                         }
                         if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringSustain) && IsOffCooldown(ChaoticSpring) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_CS_HP_Threshold))
                         {
-                            if (!HasEffect(Buffs.FirstmindsFocus) && !HasEffect(Buffs.LifeOfTheDragon) && IsOnCooldown(Geirskogul) && IsOnCooldown(ElusiveJump)
-                             || !HasEffect(Buffs.FirstmindsFocus) && HasEffect(Buffs.LifeOfTheDragon) && IsOnCooldown(Geirskogul) && IsOnCooldown(ElusiveJump) && WasLastWeaponskill(HeavensThrust))
+                            if ((!HasEffect(Buffs.FirstmindsFocus) && !HasEffect(Buffs.LifeOfTheDragon) && IsOnCooldown(Geirskogul) && IsOnCooldown(ElusiveJump))
+                             || (!HasEffect(Buffs.FirstmindsFocus) && HasEffect(Buffs.LifeOfTheDragon) && IsOnCooldown(Geirskogul) && IsOnCooldown(ElusiveJump) && WasLastWeaponskill(HeavensThrust)))
                                 return ChaoticSpring;
                         }
                         if (IsEnabled(CustomComboPreset.DRGPvP_Geirskogul) && IsOffCooldown(Geirskogul) && WasLastAbility(ElusiveJump) && HasEffect(Buffs.FirstmindsFocus))
