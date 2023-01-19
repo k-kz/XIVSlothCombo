@@ -8,7 +8,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
     internal abstract partial class CustomComboFunctions
     {
         /// <summary> Checks if player is in a party </summary>
-        public static bool IsInParty() => (Service.PartyList.PartyId > 0);
+        public static bool IsInParty() => Service.PartyList.PartyId > 0;
 
         /// <summary> Gets the party list </summary>
         /// <returns> Current party list. </returns>
@@ -18,7 +18,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             try
             {
-                var o = slot switch
+                FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject* o = slot switch
                 {
                     1 => GetTarget(TargetType.Self),
                     2 => GetTarget(TargetType.P2),
