@@ -67,9 +67,9 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Souleater)
                 {
-                    var gauge = GetJobGauge<DRKGauge>();
-                    var plungeChargesRemaining = PluginConfiguration.GetCustomIntValue(Config.DRK_KeepPlungeCharges);
-                    var mpRemaining = PluginConfiguration.GetCustomIntValue(Config.DRK_MPManagement);
+                    DRKGauge gauge = GetJobGauge<DRKGauge>();
+                    int plungeChargesRemaining = PluginConfiguration.GetCustomIntValue(Config.DRK_KeepPlungeCharges);
+                    int mpRemaining = PluginConfiguration.GetCustomIntValue(Config.DRK_MPManagement);
 
                     if (IsEnabled(CustomComboPreset.DRK_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.DRK_VariantCure))
                         return Variant.VariantCure;
@@ -128,7 +128,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     if (IsEnabled(CustomComboPreset.DRK_SaltedEarth) && LevelChecked(SaltedEarth))
                                     {
                                         if ((IsOffCooldown(SaltedEarth) && !HasEffect(Buffs.SaltedEarth)) || //Salted Earth
-                                            (HasEffect(Buffs.SaltedEarth) && IsOffCooldown(SaltAndDarkness) && IsOnCooldown(SaltedEarth) && LevelChecked(SaltAndDarkness)) && GetBuffRemainingTime(Buffs.SaltedEarth) < 9) //Salt and Darkness
+                                            (HasEffect(Buffs.SaltedEarth) && IsOffCooldown(SaltAndDarkness) && IsOnCooldown(SaltedEarth) && LevelChecked(SaltAndDarkness) && GetBuffRemainingTime(Buffs.SaltedEarth) < 9)) //Salt and Darkness
                                             return OriginalHook(SaltedEarth);
                                     }
 
@@ -199,7 +199,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == StalwartSoul)
                 {
-                    var gauge = GetJobGauge<DRKGauge>();
+                    DRKGauge gauge = GetJobGauge<DRKGauge>();
 
                     if (IsEnabled(CustomComboPreset.DRK_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.DRK_VariantCure))
                         return Variant.VariantCure;
@@ -268,9 +268,9 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                var gauge = GetJobGauge<DRKGauge>();
+                DRKGauge gauge = GetJobGauge<DRKGauge>();
 
-                if (actionID == CarveAndSpit || actionID == AbyssalDrain)
+                if (actionID is CarveAndSpit or AbyssalDrain)
                 {
                     if (gauge.Blood >= 50 && IsOffCooldown(LivingShadow) && LevelChecked(LivingShadow))
                         return LivingShadow;
