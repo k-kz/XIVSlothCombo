@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Statuses;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Services;
+using LuminaSheets = Lumina.Excel.GeneratedSheets;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
 {
@@ -127,7 +128,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             {
                 foreach (Status status in chara.StatusList)
                 {
-                    if (ActionWatching.StatusSheet.TryGetValue(status.StatusId, out Lumina.Excel.GeneratedSheets.Status? statusItem) && statusItem.CanDispel)
+                    if (ActionWatching.StatusSheet.TryGetValue(status.StatusId, out LuminaSheets.Status? statusItem) && statusItem.CanDispel)
                         return true;
                 }
             }
