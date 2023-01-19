@@ -68,9 +68,9 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (IsEnabled(CustomComboPreset.WAR_ST_StormsPath) && actionID == StormsPath)
                 {
-                    var gauge = GetJobGauge<WARGauge>().BeastGauge;
-                    var surgingThreshold = PluginConfiguration.GetCustomIntValue(Config.WAR_SurgingRefreshRange);
-                    var onslaughtChargesRemaining = PluginConfiguration.GetCustomIntValue(Config.WAR_KeepOnslaughtCharges);
+                    byte gauge = GetJobGauge<WARGauge>().BeastGauge;
+                    int surgingThreshold = PluginConfiguration.GetCustomIntValue(Config.WAR_SurgingRefreshRange);
+                    int onslaughtChargesRemaining = PluginConfiguration.GetCustomIntValue(Config.WAR_KeepOnslaughtCharges);
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
@@ -187,7 +187,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Overpower)
                 {
-                    var gauge = GetJobGauge<WARGauge>().BeastGauge;
+                    byte gauge = GetJobGauge<WARGauge>().BeastGauge;
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
@@ -271,7 +271,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if (actionID == InnerBeast || actionID == SteelCyclone)
+                if (actionID is InnerBeast or SteelCyclone)
                 {
 
                     if (LevelChecked(PrimalRend) && HasEffect(Buffs.PrimalRendReady))
@@ -295,10 +295,10 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is InnerBeast or FellCleave or SteelCyclone or Decimate)
                 {
-                    var rageGauge = GetJobGauge<WARGauge>();
-                    var rageThreshold = PluginConfiguration.GetCustomIntValue(Config.WAR_InfuriateRange);
-                    var hasNascent = HasEffect(Buffs.NascentChaos);
-                    var hasInnerRelease = HasEffect(Buffs.InnerRelease);
+                    WARGauge rageGauge = GetJobGauge<WARGauge>();
+                    int rageThreshold = PluginConfiguration.GetCustomIntValue(Config.WAR_InfuriateRange);
+                    bool hasNascent = HasEffect(Buffs.NascentChaos);
+                    bool hasInnerRelease = HasEffect(Buffs.InnerRelease);
 
                     if (InCombat() && rageGauge.BeastGauge <= rageThreshold && ActionReady(Infuriate) && !hasNascent
                     && ((!hasInnerRelease) || IsNotEnabled(CustomComboPreset.WAR_InfuriateFellCleave_IRFirst)))
