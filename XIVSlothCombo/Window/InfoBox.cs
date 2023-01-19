@@ -48,7 +48,7 @@ namespace XIVSlothCombo.Window
             if (HasMaxWidth)
             {
                 if ((ImGui.GetItemRectMax().X - ImGui.GetItemRectMin().X + 15f) < ImGui.GetWindowSize().X - 60f)
-                Size = Size with { X = ImGui.GetItemRectMax().X - ImGui.GetItemRectMin().X + 15f };
+                    Size = Size with { X = ImGui.GetItemRectMax().X - ImGui.GetItemRectMin().X + 15f };
             }
 
             DrawCorners();
