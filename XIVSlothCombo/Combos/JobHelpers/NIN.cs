@@ -15,7 +15,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
             ///<summary> Checks if the player is in a state to be able to cast a ninjitsu.</summary>
             private bool CanCast()
             {
-                var gcd = CustomComboFunctions.GetCooldown(GustSlash).CooldownTotal;
+                float gcd = CustomComboFunctions.GetCooldown(GustSlash).CooldownTotal;
 
                 if (gcd == 0.5) return true;
 
@@ -31,10 +31,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
             private MudraState currentMudra = MudraState.None;
             public MudraState CurrentMudra
             {
-                get
-                {
-                    return currentMudra;
-                }
+                get => currentMudra;
                 set
                 {
                     if (value == MudraState.None)
@@ -446,17 +443,14 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
             public OpenerState CurrentState
             {
-                get
-                {
-                    return currentState;
-                }
+                get => currentState;
                 set
                 {
                     if (value != currentState)
                     {
                         if (value == OpenerState.PrePull) PrePullStep = 1;
                         if (value == OpenerState.InOpener) OpenerStep = 1;
-                        if (value == OpenerState.OpenerFinished || value == OpenerState.FailedOpener) { PrePullStep = 0; OpenerStep = 0; }
+                        if (value is OpenerState.OpenerFinished or OpenerState.FailedOpener) { PrePullStep = 0; OpenerStep = 0; }
 
                         currentState = value;
                     }
@@ -488,7 +482,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
                     else if (PrePullStep == 3) mudraState.CastSuiton(ref actionID);
 
                     //Failure states
-                    if (PrePullStep is (1 or 2) && CustomComboFunctions.InCombat()) { mudraState.CurrentMudra = MudraCasting.MudraState.None; ResetOpener(); }
+                    if (PrePullStep is 1 or 2 && CustomComboFunctions.InCombat()) { mudraState.CurrentMudra = MudraCasting.MudraState.None; ResetOpener(); }
 
                     return true;
 
@@ -582,10 +576,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 return false;
             }
 
-            private void ResetOpener()
-            {
-                CurrentState = OpenerState.FailedOpener;
-            }
+            private void ResetOpener() => CurrentState = OpenerState.FailedOpener;
 
             private bool openerEventsSetup = false;
 
@@ -595,7 +586,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
                 if (!openerEventsSetup) { Service.Condition.ConditionChange += CheckCombatStatus; openerEventsSetup = true; }
 
-                if (CurrentState == OpenerState.PrePull || CurrentState == OpenerState.FailedOpener)
+                if (CurrentState is OpenerState.PrePull or OpenerState.FailedOpener)
                     if (DoPrePullSteps(ref actionID, mudraState)) return true;
 
                 if (CurrentState == OpenerState.InOpener)
