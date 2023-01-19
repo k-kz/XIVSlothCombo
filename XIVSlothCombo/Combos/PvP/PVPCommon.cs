@@ -70,10 +70,10 @@ namespace XIVSlothCombo.Combos.PvP
 
             public bool Execute()
             {
-                var jobMaxHp = LocalPlayer.MaxHp;
-                var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyHealThreshold);
-                var maxHPThreshold = jobMaxHp - 15000;
-                var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
+                uint jobMaxHp = LocalPlayer.MaxHp;
+                int threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyHealThreshold);
+                uint maxHPThreshold = jobMaxHp - 15000;
+                float remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
 
 
                 if (HasEffect(3180)) return false; //DRG LB buff
@@ -109,9 +109,9 @@ namespace XIVSlothCombo.Combos.PvP
 
             public bool Execute()
             {
-                var jobMaxHp = LocalPlayer.MaxHp;
-                var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyGuardThreshold);
-                var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)jobMaxHp;
+                uint jobMaxHp = LocalPlayer.MaxHp;
+                int threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyGuardThreshold);
+                float remainingPercentage = (float)LocalPlayer.CurrentHp / (float)jobMaxHp;
 
                 if (HasEffect(3180)) return false; //DRG LB buff
                 if (HasEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
@@ -146,7 +146,7 @@ namespace XIVSlothCombo.Combos.PvP
 
             public bool Execute()
             {
-                var selectedStatuses = PluginConfiguration.GetCustomBoolArrayValue(Config.QuickPurifyStatuses);
+                bool[] selectedStatuses = PluginConfiguration.GetCustomBoolArrayValue(Config.QuickPurifyStatuses);
 
                 if (HasEffect(3180)) return false; //DRG LB buff
 
