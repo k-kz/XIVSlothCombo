@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using XIVSlothCombo.Data;
+using LuminaSheets = Lumina.Excel.GeneratedSheets;
 
 namespace XIVSlothCombo.Attributes
 {
@@ -14,7 +15,7 @@ namespace XIVSlothCombo.Attributes
         {
             foreach (uint id in actionIDs)
             {
-                if (ActionWatching.ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action) && action != null)
+                if (ActionWatching.ActionSheet.TryGetValue(id, out LuminaSheets.Action? action) && action != null)
                 {
                     ActionNames.Add($"{action.Name}");
                 }
