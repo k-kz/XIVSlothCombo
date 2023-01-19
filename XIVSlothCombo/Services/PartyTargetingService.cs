@@ -1,6 +1,7 @@
 ﻿using System;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using GameObject = FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject;
+using GameObjectID = FFXIVClientStructs.FFXIV.Client.Game.Object.GameObjectID;
 
 namespace XIVSlothCombo.Services
 {
@@ -11,7 +12,7 @@ namespace XIVSlothCombo.Services
 
         public static long GetObjectID(GameObject* o)
         {
-            var id = o->GetObjectID();
+            GameObjectID id = o->GetObjectID();
             return (id.Type * 0x1_0000_0000) | id.ObjectID;
         }
 
