@@ -6,8 +6,8 @@ using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Services;
-using StructsObject = FFXIVClientStructs.FFXIV.Client.Game.Object;
 using LuminaSheets = Lumina.Excel.GeneratedSheets;
+using StructsObject = FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
 {
