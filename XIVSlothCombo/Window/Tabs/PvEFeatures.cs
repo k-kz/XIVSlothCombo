@@ -1,15 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
-using Dalamud.Interface.Colors;
-using Dalamud.Utility;
 using ImGuiNET;
 using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.Services;
 using XIVSlothCombo.Window.Functions;
 using XIVSlothCombo.Window.MessagesNS;
+using SysGeneric = System.Collections.Generic;
 
 namespace XIVSlothCombo.Window.Tabs
 {
@@ -38,7 +36,7 @@ namespace XIVSlothCombo.Window.Tabs
             {
                 if (ImGui.CollapsingHeader(jobName))
                 {
-                    foreach (var otherJob in groupedPresets.Keys.Where(x => x != jobName))
+                    foreach (string? otherJob in groupedPresets.Keys.Where(x => x != jobName))
                     {
                         ImGui.GetStateStorage().SetInt(ImGui.GetID(otherJob), 0);
                     }
@@ -82,7 +80,7 @@ namespace XIVSlothCombo.Window.Tabs
                 else
                 {
                     i += groupedPresets[jobName].Where(x => !PluginConfiguration.IsSecret(x.Preset)).Count();
-                    foreach (var preset in groupedPresets[jobName].Where(x => !PluginConfiguration.IsSecret(x.Preset)))
+                    foreach ((Combos.CustomComboPreset Preset, CustomComboInfoAttribute Info) preset in groupedPresets[jobName].Where(x => !PluginConfiguration.IsSecret(x.Preset)))
                     {
                         i += Presets.AllChildren(presetChildren[preset.Preset]);
                     }
@@ -95,10 +93,10 @@ namespace XIVSlothCombo.Window.Tabs
 
         private static void DrawVariantContents(string jobName)
         {
-            foreach (var (preset, info) in groupedPresets[jobName].Where(x => PluginConfiguration.IsVariant(x.Preset)))
+            foreach ((Combos.CustomComboPreset preset, CustomComboInfoAttribute info) in groupedPresets[jobName].Where(x => PluginConfiguration.IsVariant(x.Preset)))
             {
                 int i = -1;
-                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
+                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => Presets.DrawPreset(preset, info, ref i) };
                 presetBox.Draw();
                 ImGuiHelpers.ScaledDummy(12.0f);
             }
@@ -108,17 +106,18 @@ namespace XIVSlothCombo.Window.Tabs
         {
             if (!Messages.PrintBLUMessage(jobName)) return;
 
-            foreach (var (preset, info) in groupedPresets[jobName].Where(x =>   !PluginConfiguration.IsSecret(x.Preset) && 
-                                                                                !PluginConfiguration.IsVariant(x.Preset) &&
-                                                                                !PluginConfiguration.IsBozja(x.Preset) &&
-                                                                                !PluginConfiguration.IsEureka(x.Preset)))
+            foreach ((Combos.CustomComboPreset preset, CustomComboInfoAttribute info) in groupedPresets[jobName].Where(x =>
+                !PluginConfiguration.IsSecret(x.Preset) &&
+                !PluginConfiguration.IsVariant(x.Preset) &&
+                !PluginConfiguration.IsBozja(x.Preset) &&
+                !PluginConfiguration.IsEureka(x.Preset)))
             {
-                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
+                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => Presets.DrawPreset(preset, info, ref i) };
 
                 if (Service.Configuration.HideConflictedCombos)
                 {
-                    var conflictOriginals = Service.Configuration.GetConflicts(preset); // Presets that are contained within a ConflictedAttribute
-                    var conflictsSource = Service.Configuration.GetAllConflicts();      // Presets with the ConflictedAttribute
+                    Combos.CustomComboPreset[] conflictOriginals = Service.Configuration.GetConflicts(preset);              // Presets that are contained within a ConflictedAttribute
+                    SysGeneric.List<Combos.CustomComboPreset> conflictsSource = Service.Configuration.GetAllConflicts();    // Presets with the ConflictedAttribute
 
                     if (!conflictsSource.Where(x => x == preset).Any() || conflictOriginals.Length == 0)
                     {
