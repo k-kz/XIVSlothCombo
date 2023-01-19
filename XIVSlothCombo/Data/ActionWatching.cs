@@ -4,8 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using XIVSlothCombo.Services;
 using Lumina.Excel.GeneratedSheets;
+using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Data
 {
@@ -51,7 +51,7 @@ namespace XIVSlothCombo.Data
 
                 LastAction = header.ActionId;
 
-                ActionSheet.TryGetValue(header.ActionId, out var sheet);
+                ActionSheet.TryGetValue(header.ActionId, out Lumina.Excel.GeneratedSheets.Action? sheet);
                 if (sheet != null)
                 {
                     switch (sheet.ActionCategory.Value.RowId)
@@ -99,7 +99,7 @@ namespace XIVSlothCombo.Data
             if (CombatActions.Count == 0) return 0;
 
             int currentLastIndex = 0;
-            foreach (var action in actions)
+            foreach (uint action in actions)
             {
                 if (CombatActions.Any(x => x == action))
                 {
@@ -132,10 +132,10 @@ namespace XIVSlothCombo.Data
         public static bool WasLast2ActionsAbilities()
         {
             if (CombatActions.Count < 2) return false;
-            var lastAction = CombatActions.Last();
-            var secondLastAction = CombatActions[CombatActions.Count - 2];
+            uint lastAction = CombatActions.Last();
+            uint secondLastAction = CombatActions[CombatActions.Count - 2];
 
-            return (GetAttackType(lastAction) == GetAttackType(secondLastAction) && GetAttackType(lastAction) == ActionAttackType.Ability);
+            return GetAttackType(lastAction) == GetAttackType(secondLastAction) && GetAttackType(lastAction) == ActionAttackType.Ability;
         }
 
 
@@ -150,10 +150,7 @@ namespace XIVSlothCombo.Data
 
         private static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
 
-        public static void OutputLog()
-        {
-            Service.ChatGui.Print($"You just used: {GetActionName(LastAction)} x{LastActionUseCount}");
-        }
+        public static void OutputLog() => Service.ChatGui.Print($"You just used: {GetActionName(LastAction)} x{LastActionUseCount}");
 
         public static void Dispose()
         {
@@ -179,12 +176,12 @@ namespace XIVSlothCombo.Data
             SendActionHook?.Disable();
         }
 
-        public static int GetLevel(uint id) => ActionSheet.TryGetValue(id, out var action) && action.ClassJobCategory is not null ? action.ClassJobLevel : 255;
-        public static int GetActionRange(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.Range : -2; // 0 & -1 are valid numbers. -2 is our failure code for InActionRange
-        public static int GetActionEffectRange(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.EffectRange : -1;
-        public static int GetTraitLevel(uint id) => TraitSheet.TryGetValue(id, out var trait) ? trait.Level : 255;
-        public static string GetActionName(uint id) => ActionSheet.TryGetValue(id, out var action) ? (string)action.Name : "UNKNOWN ABILITY";
-        public static string GetStatusName(uint id) => StatusSheet.TryGetValue(id, out var status) ? (string)status.Name : "Unknown Status";
+        public static int GetLevel(uint id) => ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action) && action.ClassJobCategory is not null ? action.ClassJobLevel : 255;
+        public static int GetActionRange(uint id) => ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action) ? action.Range : -2; // 0 & -1 are valid numbers. -2 is our failure code for InActionRange
+        public static int GetActionEffectRange(uint id) => ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action) ? action.EffectRange : -1;
+        public static int GetTraitLevel(uint id) => TraitSheet.TryGetValue(id, out Trait? trait) ? trait.Level : 255;
+        public static string GetActionName(uint id) => ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action) ? (string)action.Name : "UNKNOWN ABILITY";
+        public static string GetStatusName(uint id) => StatusSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Status? status) ? (string)status.Name : "Unknown Status";
 
         public static List<uint>? GetStatusesByName(string status)
         {
@@ -199,7 +196,7 @@ namespace XIVSlothCombo.Data
 
         public static ActionAttackType GetAttackType(uint id)
         {
-            if (!ActionSheet.TryGetValue(id, out var action)) return ActionAttackType.Unknown;
+            if (!ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action)) return ActionAttackType.Unknown;
 
             return action.ActionCategory.Value.Name.RawString switch
             {
