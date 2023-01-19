@@ -121,7 +121,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             GameObject? healTarget = null;
             TargetManager tm = Service.TargetManager;
-            
+
             if (HasFriendlyTarget(tm.SoftTarget)) healTarget = tm.SoftTarget;
             if (healTarget is null && HasFriendlyTarget(CurrentTarget)) healTarget = CurrentTarget;
             //if (checkMO && HasFriendlyTarget(tm.MouseOverTarget)) healTarget = tm.MouseOverTarget;
@@ -131,7 +131,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
                 if (t != null)
                 {
                     long o = PartyTargetingService.GetObjectID(t);
-                    GameObject? uiTarget =  Service.ObjectTable.Where(x => x.ObjectId == o).First();
+                    GameObject? uiTarget = Service.ObjectTable.Where(x => x.ObjectId == o).First();
                     if (HasFriendlyTarget(uiTarget)) healTarget = uiTarget;
                 }
             }
@@ -170,7 +170,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         public static bool TargetNeedsPositionals()
         {
             if (!HasBattleTarget()) return false;
-            if (ActionWatching.BNpcSheet.TryGetValue(CurrentTarget.DataId, out var bnpc) && !bnpc.Unknown10) return true;
+            if (ActionWatching.BNpcSheet.TryGetValue(CurrentTarget.DataId, out Lumina.Excel.GeneratedSheets.BNpcBase? bnpc) && !bnpc.Unknown10) return true;
             return false;
         }
 
@@ -270,29 +270,34 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         public float angleToTarget()
         {
             if (CurrentTarget is null || LocalPlayer is null)
-               return 0;
+                return 0;
 
             if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
                 return 0;
 
-            var targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
-            var angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
+            Vector2 targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
+            float angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
 
-            var regionDegrees = PositionalMath.Degrees(angle);
-            if(regionDegrees < 0) {
+            double regionDegrees = PositionalMath.Degrees(angle);
+            if (regionDegrees < 0)
+            {
                 regionDegrees = 360 + regionDegrees;
             }
 
-            if( ( regionDegrees >= 45 ) && ( regionDegrees <= 135 ) ) {
+            if (regionDegrees is >= 45 and <= 135)
+            {
                 return 1;
             }
-            if( ( regionDegrees >= 135 ) && ( regionDegrees <= 225 ) ) {
+            if (regionDegrees is >= 135 and <= 225)
+            {
                 return 2;
             }
-            if( ( regionDegrees >= 225 ) && ( regionDegrees <= 315 ) ) {
+            if (regionDegrees is >= 225 and <= 315)
+            {
                 return 3;
             }
-            if( ( regionDegrees >= 315 ) || ( regionDegrees <= 45 ) ) {
+            if (regionDegrees is >= 315 or <= 45)
+            {
                 return 4;
             }
             return 0;
@@ -310,17 +315,19 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
                 return false;
 
-            var targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
-            var angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
+            Vector2 targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
+            float angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
 
-            var regionDegrees = PositionalMath.Degrees(angle);
-            if( regionDegrees < 0 ) {
+            double regionDegrees = PositionalMath.Degrees(angle);
+            if (regionDegrees < 0)
+            {
                 regionDegrees = 360 + regionDegrees;
             }
 
-            if( ( regionDegrees >= 135 ) && ( regionDegrees <= 225 ) ) {
+            if (regionDegrees is >= 135 and <= 225)
+            {
                 return true;
-            }            
+            }
             return false;
         }
 
@@ -336,20 +343,23 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
                 return false;
 
-            var targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
-            var angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
+            Vector2 targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
+            float angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
 
-            var regionDegrees = PositionalMath.Degrees(angle);
-            if( regionDegrees < 0 ) {
+            double regionDegrees = PositionalMath.Degrees(angle);
+            if (regionDegrees < 0)
+            {
                 regionDegrees = 360 + regionDegrees;
             }
 
             // left flank
-            if( ( regionDegrees >= 45 ) && ( regionDegrees <= 135 ) ) {
+            if (regionDegrees is >= 45 and <= 135)
+            {
                 return true;
             }
             // right flank
-            if( ( regionDegrees >= 225 ) && ( regionDegrees <= 315 ) ) {            
+            if (regionDegrees is >= 225 and <= 315)
+            {
                 return true;
             }
             return false;
@@ -358,21 +368,12 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         // the following is all lifted from the excellent Resonant plugin
         internal static class PositionalMath
         {
-            static internal float Radians(float degrees)
-            {
-                return (float)Math.PI * degrees / 180.0f;
-            }
+            static internal float Radians(float degrees) => (float)Math.PI * degrees / 180.0f;
 
-            static internal double Degrees(float radians)
-            {
-                return (180 / Math.PI) * radians;
-            }
+            static internal double Degrees(float radians) => 180 / Math.PI * radians;
 
-            static internal float AngleXZ(Vector3 a, Vector3 b)
-            {
-                return (float)Math.Atan2(b.X - a.X, b.Z - a.Z);
-            }
+            static internal float AngleXZ(Vector3 a, Vector3 b) => (float)Math.Atan2(b.X - a.X, b.Z - a.Z);
         }
-    
+
     }
 }
