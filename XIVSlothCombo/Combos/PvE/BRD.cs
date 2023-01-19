@@ -115,8 +115,8 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (InCombat())
                         {
-                            if (LevelChecked(IronJaws) &&
-                                ((venomous && venomRemaining < 4) || (caustic && causticRemaining < 4)) ||
+                            if ((LevelChecked(IronJaws) &&
+                                ((venomous && venomRemaining < 4) || (caustic && causticRemaining < 4))) ||
                                 (windbite && windRemaining < 4) || (stormbite && stormRemaining < 4))
                                 return IronJaws;
                             if (!LevelChecked(IronJaws) && venomous && venomRemaining < 4)
