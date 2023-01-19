@@ -46,10 +46,10 @@ namespace XIVSlothCombo.Combos.PvP
             {
                 if (actionID == BlastCharge)
                 {
-                    var canWeave = CanWeave(actionID);
-                    var analysisStacks = GetRemainingCharges(Analysis);
-                    var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
-                    var overheated = HasEffect(Buffs.Overheated);
+                    bool canWeave = CanWeave(actionID);
+                    ushort analysisStacks = GetRemainingCharges(Analysis);
+                    ushort bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
+                    bool overheated = HasEffect(Buffs.Overheated);
 
                     if (canWeave && HasEffect(Buffs.Overheated) && IsOffCooldown(Wildfire))
                         return OriginalHook(Wildfire);
