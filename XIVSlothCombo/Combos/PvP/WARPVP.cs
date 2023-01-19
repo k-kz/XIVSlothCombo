@@ -31,7 +31,7 @@ namespace XIVSlothCombo.Combos.PvP
             {
                 if (actionID is HeavySwing or Maim or StormsPath)
                 {
-                    var canWeave = CanWeave(actionID);
+                    bool canWeave = CanWeave(actionID);
 
                     if (!GetCooldown(Bloodwhetting).IsCooldown && (IsEnabled(CustomComboPreset.WARPvP_BurstMode_Bloodwhetting) || canWeave))
                         return OriginalHook(Bloodwhetting);
