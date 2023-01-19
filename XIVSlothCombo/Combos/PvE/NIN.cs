@@ -387,7 +387,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus))
                         {
                             if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_Suiton) &&
-                                setupSuitonWindow && 
+                                setupSuitonWindow &&
                                 TrickAttack.LevelChecked() &&
                                 !HasEffect(Buffs.Suiton) &&
                                 chargeCheck &&
@@ -413,9 +413,9 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_ArmorCrush) &&
                         !HasEffect(Buffs.RaijuReady) &&
                         lastComboMove == GustSlash &&
-                        (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) && IsOnCooldown(TrickAttack) ||
+                        ((IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) && IsOnCooldown(TrickAttack)) ||
                         IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack)) &&
-                        ((gauge.HutonTimer <= hutonArmorCrushTimer) || doubleArmorCrush && timesLastEnderWasArmorCrush == 1) &&
+                        ((gauge.HutonTimer <= hutonArmorCrushTimer) || (doubleArmorCrush && timesLastEnderWasArmorCrush == 1)) &&
                         gauge.HutonTimer > 0 && ArmorCrush.LevelChecked() &&
                         comboTime > 1f)
                     {
@@ -697,10 +697,10 @@ namespace XIVSlothCombo.Combos.PvE
                         if (HasEffect(Buffs.Suiton) && IsOffCooldown(TrickAttack))
                             return OriginalHook(TrickAttack);
 
-                        if ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || useBhakaBeforeTrickWindow && gauge.Ninki == 100 && Bhavacakra.LevelChecked())
+                        if ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100 && Bhavacakra.LevelChecked()))
                             return OriginalHook(Bhavacakra);
 
-                        if ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || useBhakaBeforeTrickWindow && gauge.Ninki == 100 && !Bhavacakra.LevelChecked() && Hellfrog.LevelChecked())
+                        if ((TargetHasEffect(Debuffs.TrickAttack) && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100 && !Bhavacakra.LevelChecked() && Hellfrog.LevelChecked()))
                             return OriginalHook(Hellfrog);
 
                         if (!inTrickBurstSaveWindow)
@@ -764,9 +764,9 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == DeathBlossom)
                 {
-                    var dotonBuff = FindEffect(Buffs.Doton);
-                    var gauge = GetJobGauge<NINGauge>();
-                    var canWeave = CanWeave(GustSlash);
+                    Status? dotonBuff = FindEffect(Buffs.Doton);
+                    NINGauge gauge = GetJobGauge<NINGauge>();
+                    bool canWeave = CanWeave(GustSlash);
 
                     if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat())
                         mudraState.CurrentMudra = MudraCasting.MudraState.None;
@@ -979,7 +979,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (HasEffect(Buffs.TenChiJin) && IsEnabled(CustomComboPreset.NIN_TCJ))
                     {
-                        var tcjTimer = FindEffectAny(Buffs.TenChiJin).RemainingTime;
+                        float tcjTimer = FindEffectAny(Buffs.TenChiJin).RemainingTime;
 
                         if (tcjTimer > 5)
                             return OriginalHook(Ten);
@@ -1021,7 +1021,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Ten or Chi or Jin)
                 {
-                    var mudrapath = GetOptionValue(Config.NIN_SimpleMudra_Choice);
+                    int mudrapath = GetOptionValue(Config.NIN_SimpleMudra_Choice);
 
                     if (HasEffect(Buffs.Mudra))
                     {
