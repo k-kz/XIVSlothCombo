@@ -1,8 +1,8 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using XIVSlothCombo.Combos.PvE.Content;
-using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.Core;
+using XIVSlothCombo.CustomComboNS;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -84,7 +84,7 @@ namespace XIVSlothCombo.Combos.PvE
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_Jump;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => 
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
                 actionID is DRG.Jump or DRG.HighJump && HasEffect(DRG.Buffs.DiveReady) ? DRG.MirageDive : actionID;
         }
 
@@ -95,10 +95,10 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                var gauge = GetJobGauge<DRGGauge>();
+                DRGGauge gauge = GetJobGauge<DRGGauge>();
                 bool openerReady = IsOffCooldown(LanceCharge) && IsOffCooldown(BattleLitany);
-                var diveOptions = PluginConfiguration.GetCustomIntValue(Config.DRG_ST_DiveOptions);
-                var openerOptions = PluginConfiguration.GetCustomIntValue(Config.DRG_OpenerOptions);
+                int diveOptions = PluginConfiguration.GetCustomIntValue(Config.DRG_ST_DiveOptions);
+                int openerOptions = PluginConfiguration.GetCustomIntValue(Config.DRG_OpenerOptions);
 
                 Status? ChaosDoTDebuff;
                 if (LevelChecked(ChaoticSpring)) ChaosDoTDebuff = FindTargetEffect(Debuffs.ChaoticSpring);
@@ -258,7 +258,7 @@ namespace XIVSlothCombo.Combos.PvE
                                         //Life Surge Feature
                                         if (IsEnabled(CustomComboPreset.DRG_ST_LifeSurge) && !HasEffect(Buffs.LifeSurge) && GetRemainingCharges(LifeSurge) > 0 &&
                                             (((HasEffect(Buffs.RightEye) || HasEffect(Buffs.LanceCharge)) && lastComboMove is VorpalThrust) ||
-                                            (HasEffect(Buffs.BattleLitany) && ((HasEffect(Buffs.EnhancedWheelingThrust) && WasLastWeaponskill(FangAndClaw)) || HasEffect(Buffs.SharperFangAndClaw) && WasLastWeaponskill(WheelingThrust)))))
+                                            (HasEffect(Buffs.BattleLitany) && ((HasEffect(Buffs.EnhancedWheelingThrust) && WasLastWeaponskill(FangAndClaw)) || (HasEffect(Buffs.SharperFangAndClaw) && WasLastWeaponskill(WheelingThrust))))))
                                             return LifeSurge;
 
                                         //Dives Feature
@@ -329,8 +329,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is DoomSpike)
                 {
-                    var gauge = GetJobGauge<DRGGauge>();
-                    var DiveOptions = PluginConfiguration.GetCustomIntValue(Config.DRG_AOE_DiveOptions);
+                    DRGGauge gauge = GetJobGauge<DRGGauge>();
+                    int DiveOptions = PluginConfiguration.GetCustomIntValue(Config.DRG_AOE_DiveOptions);
 
                     if (IsEnabled(CustomComboPreset.DRG_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.DRG_VariantCure))
                         return Variant.VariantCure;
@@ -438,7 +438,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Stardiver)
                 {
-                    var gauge = GetJobGauge<DRGGauge>();
+                    DRGGauge gauge = GetJobGauge<DRGGauge>();
 
                     if (gauge.IsLOTDActive && IsOffCooldown(Stardiver) && LevelChecked(Stardiver))
                         return Stardiver;
