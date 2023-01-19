@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
-using System.Collections.Generic;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
@@ -60,7 +60,7 @@ namespace XIVSlothCombo.Combos.PvE
             Dia = 1871;
         }
 
-        //Debuff Pairs of Actions and Debuff
+        // Debuff pairs of actions and debuff
         internal static readonly Dictionary<uint, ushort>
             AeroList = new() {
                 { Aero, Debuffs.Aero },
@@ -78,6 +78,7 @@ namespace XIVSlothCombo.Combos.PvE
                 WHM_Medica_ThinAir = "WHM_Medica_ThinAir";
 
             internal static bool WHM_ST_MainCombo_DoT_Adv => PluginConfiguration.GetCustomBoolValue(nameof(WHM_ST_MainCombo_DoT_Adv));
+
             internal static float WHM_ST_MainCombo_DoT_Threshold => PluginConfiguration.GetCustomFloatValue(nameof(WHM_ST_MainCombo_DoT_Threshold));
         }
 
@@ -113,12 +114,9 @@ namespace XIVSlothCombo.Combos.PvE
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_CureSync;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-            {
-                return actionID is Cure2 && !LevelChecked(Cure2)
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => actionID is Cure2 && !LevelChecked(Cure2)
                     ? Cure
                     : actionID;
-            }
         }
 
         internal class WHM_Afflatus : CustomCombo
@@ -143,10 +141,13 @@ namespace XIVSlothCombo.Combos.PvE
                     // Seems like a weird condition set to return Cure II. -k
                     if (benisonPrioFeatureEnabled && benisonReady && benisonJustUsed)
                         return actionID;
+
                     if (tetraPrioFeatureEnabled && tetraReady && GetTargetHPPercent() <= tetraHP)
                         return actionID;
+
                     else if (IsEnabled(CustomComboPreset.WHM_Cure2_Misery) && BloodLilies == 3)
                         return AfflatusMisery;
+
                     return LevelChecked(AfflatusSolace) && hasLily
                         ? AfflatusSolace
                         : actionID;
@@ -202,14 +203,14 @@ namespace XIVSlothCombo.Combos.PvE
                     // Counter reset
                     if (!InCombat()) glare3Count = 0;
 
-                    // Check Glare3 use
+                    // Check Glare III use
                     if (InCombat() && usedGlare3 == false && lastComboMove == Glare3 && glare3CD > 1)
                     {
-                        usedGlare3 = true;  // Registers that Glare3 was used and blocks further incrementation of glare3Count
-                        glare3Count++;      // Increments Glare3 counter
+                        usedGlare3 = true;  // Registers that Glare III was used and blocks further incrementation of glare3Count
+                        glare3Count++;      // Increments Glare III counter
                     }
 
-                    // Check Glare3 use reset
+                    // Check Glare III use reset
                     if (usedGlare3 == true && glare3CD < 1) usedGlare3 = false; // Resets block to allow "Check Glare3 use"
 
                     // Bypass counter when disabled
@@ -224,17 +225,16 @@ namespace XIVSlothCombo.Combos.PvE
                         bool assizeEnabled = IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Assize);
                         bool lucidEnabled = IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Lucid);
 
-
                         if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_Rampart) &&
-                            IsEnabled(Variant.VariantRampart) &&
-                            IsOffCooldown(Variant.VariantRampart) &&
-                            CanSpellWeave(actionID))
+                            IsEnabled(Variant.VariantRampart) && IsOffCooldown(Variant.VariantRampart) && CanSpellWeave(actionID))
                             return Variant.VariantRampart;
 
                         if (pomEnabled && pomReady)
                             return PresenceOfMind;
+
                         if (assizeEnabled && assizeReady)
                             return Assize;
+
                         if (lucidEnabled && lucidReady)
                             return All.LucidDreaming;
                     }
@@ -243,17 +243,19 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_DoT) && InCombat() && LevelChecked(Aero))
                     {
                         Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-                        if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) &&
-                            IsEnabled(Variant.VariantSpiritDart) &&
-                            (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
-                            CanSpellWeave(actionID))
+
+                        if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) && IsEnabled(Variant.VariantSpiritDart) &&
+                            (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) && CanSpellWeave(actionID))
                             return Variant.VariantSpiritDart;
 
-                        uint dot = OriginalHook(Aero); //Grab the appropriate DoT Action
-                        Status? dotDebuff = FindTargetEffect(AeroList[dot]); //Match it with it's Debuff ID, and check for the Debuff
+                        uint dot = OriginalHook(Aero);                          // Grab the appropriate DoT action
+                        Status? dotDebuff = FindTargetEffect(AeroList[dot]);    // Match it with it's debuff ID, and check for the debuff
 
                         // DoT Uptime & HP% threshold
-                        float refreshtimer = Config.WHM_ST_MainCombo_DoT_Adv ? Config.WHM_ST_MainCombo_DoT_Threshold : 3;
+                        float refreshtimer = Config.WHM_ST_MainCombo_DoT_Adv
+                            ? Config.WHM_ST_MainCombo_DoT_Threshold
+                            : 3;
+
                         if ((dotDebuff is null || dotDebuff.RemainingTime <= refreshtimer) &&
                             GetTargetHPPercent() > GetOptionValue(Config.WHM_ST_MainCombo_DoT))
                             return OriginalHook(Aero);
@@ -262,6 +264,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_LilyOvercap) && LevelChecked(AfflatusRapture) &&
                         (liliesFull || liliesNearlyFull))
                         return AfflatusRapture;
+
                     if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Misery_oGCD) && LevelChecked(AfflatusMisery) &&
                         gauge.BloodLily >= 3 && openerDelayComplete)
                         return AfflatusMisery;
@@ -284,12 +287,16 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (!LevelChecked(Medica2))
                         return Medica1;
+
                     if (IsEnabled(CustomComboPreset.WHM_Medica_Misery) && gauge.BloodLily == 3)
                         return AfflatusMisery;
+
                     if (IsEnabled(CustomComboPreset.WHM_Medica_Rapture) && LevelChecked(AfflatusRapture) && gauge.Lily > 0)
                         return AfflatusRapture;
+
                     if (HasEffect(Buffs.Medica2) && GetBuffRemainingTime(Buffs.Medica2) > 2)
                         return Medica1;
+
                     if (IsEnabled(CustomComboPreset.WHM_Medica_ThinAir) && thinAirReady)
                         return ThinAir;
                 }
@@ -315,6 +322,7 @@ namespace XIVSlothCombo.Combos.PvE
                         ((IsEnabled(CustomComboPreset.WHM_Afflatus_oGCDHeals_BenisonWeave) && canWeave) ||
                         IsEnabled(CustomComboPreset.WHM_Afflatus_oGCDHeals_Benison)))
                         return DivineBenison;
+
                     if (tetraReady && GetTargetHPPercent() <= tetraHP &&
                         ((IsEnabled(CustomComboPreset.WHM_Afflatus_oGCDHeals_TetraWeave) && canWeave) ||
                         IsEnabled(CustomComboPreset.WHM_Afflatus_oGCDHeals_Tetra)))
@@ -342,21 +350,19 @@ namespace XIVSlothCombo.Combos.PvE
                         return Assize;
 
                     if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_Rampart) &&
-                        IsEnabled(Variant.VariantRampart) &&
-                        IsOffCooldown(Variant.VariantRampart))
+                        IsEnabled(Variant.VariantRampart) && IsOffCooldown(Variant.VariantRampart))
                         return Variant.VariantRampart;
 
                     Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-                    if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) &&
-                        IsEnabled(Variant.VariantSpiritDart) &&
-                        (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
-                        HasBattleTarget())
+                    if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) && IsEnabled(Variant.VariantSpiritDart) &&
+                        (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) && HasBattleTarget())
                         return Variant.VariantSpiritDart;
 
                     if (CanSpellWeave(actionID) || IsMoving)
                     {
                         if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && ActionReady(PresenceOfMind))
                             return PresenceOfMind;
+
                         if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Lucid) && ActionReady(All.LucidDreaming) &&
                             LocalPlayer.CurrentMp <= PluginConfiguration.GetCustomIntValue(Config.WHM_AoE_Lucid))
                             return All.LucidDreaming;
@@ -365,6 +371,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_LilyOvercap) && LevelChecked(AfflatusRapture) &&
                         (liliesFullNoBlood || liliesNearlyFull))
                         return AfflatusRapture;
+
                     if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Misery) && LevelChecked(AfflatusMisery) &&
                         gauge.BloodLily >= 3 && HasBattleTarget())
                         return AfflatusMisery;
