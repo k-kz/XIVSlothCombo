@@ -14,7 +14,7 @@ namespace XIVSlothCombo.Attributes
         {
             foreach (uint id in actionIDs)
             {
-                if (ActionWatching.ActionSheet.TryGetValue(id, out var action) && action != null)
+                if (ActionWatching.ActionSheet.TryGetValue(id, out Lumina.Excel.GeneratedSheets.Action? action) && action != null)
                 {
                     ActionNames.Add($"{action.Name}");
                 }
