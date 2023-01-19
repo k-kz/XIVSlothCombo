@@ -13,9 +13,9 @@ namespace XIVSlothCombo.Combos.PvE
 
         public static int NumSen(SAMGauge gauge)
         {
-            var ka = gauge.Sen.HasFlag(Sen.KA);
-            var getsu = gauge.Sen.HasFlag(Sen.GETSU);
-            var setsu = gauge.Sen.HasFlag(Sen.SETSU);
+            bool ka = gauge.Sen.HasFlag(Sen.KA);
+            bool getsu = gauge.Sen.HasFlag(Sen.GETSU);
+            bool setsu = gauge.Sen.HasFlag(Sen.SETSU);
             return (ka ? 1 : 0) + (getsu ? 1 : 0) + (setsu ? 1 : 0);
         }
 
@@ -94,8 +94,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Yukikaze)
                 {
-                    var gauge = GetJobGauge<SAMGauge>();
-                    var SamKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_KenkiOvercapAmount);
+                    SAMGauge gauge = GetJobGauge<SAMGauge>();
+                    int SamKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_KenkiOvercapAmount);
 
                     if (CanWeave(actionID))
                     {
@@ -137,21 +137,21 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Gekko)
                 {
-                    var gauge = GetJobGauge<SAMGauge>();
-                    var SamKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_KenkiOvercapAmount);
-                    var meikyoBuff = HasEffect(Buffs.MeikyoShisui);
-                    var oneSeal = OriginalHook(Iaijutsu) == Higanbana;
-                    var twoSeal = OriginalHook(Iaijutsu) == TenkaGoken;
-                    var threeSeal = OriginalHook(Iaijutsu) == Setsugekka;
-                    var meikyostacks = GetBuffStacks(Buffs.MeikyoShisui);
-                    var SamFillerCombo = PluginConfiguration.GetCustomIntValue(Config.SAM_FillerCombo);
-                    var SamMeikyoChoice = PluginConfiguration.GetCustomIntValue(Config.SAM_MeikyoChoice);
-                    var HiganbanaThreshold = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_Higanbana_Threshold);
-                    var executeThreshold = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_ExecuteThreshold);
-                    var enemyHP = GetTargetHPPercent();
+                    SAMGauge gauge = GetJobGauge<SAMGauge>();
+                    int SamKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_KenkiOvercapAmount);
+                    bool meikyoBuff = HasEffect(Buffs.MeikyoShisui);
+                    bool oneSeal = OriginalHook(Iaijutsu) == Higanbana;
+                    bool twoSeal = OriginalHook(Iaijutsu) == TenkaGoken;
+                    bool threeSeal = OriginalHook(Iaijutsu) == Setsugekka;
+                    float meikyostacks = GetBuffStacks(Buffs.MeikyoShisui);
+                    int SamFillerCombo = PluginConfiguration.GetCustomIntValue(Config.SAM_FillerCombo);
+                    int SamMeikyoChoice = PluginConfiguration.GetCustomIntValue(Config.SAM_MeikyoChoice);
+                    int HiganbanaThreshold = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_Higanbana_Threshold);
+                    int executeThreshold = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_ExecuteThreshold);
+                    float enemyHP = GetTargetHPPercent();
                     bool openerReady = GetRemainingCharges(MeikyoShisui) == 1 && IsOffCooldown(Senei) && IsOffCooldown(Ikishoten) && GetRemainingCharges(TsubameGaeshi) == 2;
 
-                    
+
                     if (!InCombat())
                     {
                         hasDied = false;
@@ -244,14 +244,14 @@ namespace XIVSlothCombo.Combos.PvE
                             //GCDs
                             if ((twoSeal && lastComboMove == Yukikaze) ||
                                 (threeSeal && (GetRemainingCharges(MeikyoShisui) == 1 || !HasEffect(Buffs.OgiNamikiriReady))) ||
-                                (oneSeal && !TargetHasEffect(Debuffs.Higanbana) && GetRemainingCharges(TsubameGaeshi) == 1) && enemyHP > HiganbanaThreshold)
+                                (oneSeal && !TargetHasEffect(Debuffs.Higanbana) && GetRemainingCharges(TsubameGaeshi) == 1 && enemyHP > HiganbanaThreshold))
                                 return OriginalHook(Iaijutsu);
 
                             if ((gauge.Kaeshi == Kaeshi.NAMIKIRI) ||
                                 (WasLastWeaponskill(Higanbana) && HasEffect(Buffs.OgiNamikiriReady)))
                                 return OriginalHook(OgiNamikiri);
 
-                            if (gauge.Kaeshi == Kaeshi.SETSUGEKKA || gauge.Kaeshi == Kaeshi.GOKEN)
+                            if (gauge.Kaeshi is Kaeshi.SETSUGEKKA or Kaeshi.GOKEN)
                                 return OriginalHook(TsubameGaeshi);
 
                             //1-2-3 Logic
@@ -430,7 +430,7 @@ namespace XIVSlothCombo.Combos.PvE
                                         if (lastComboMove == Hakaze)
                                             return Yukikaze;
 
-                                        if (gauge.Sen == 0 || gauge.Sen == Sen.SETSU)
+                                        if (gauge.Sen is 0 or Sen.SETSU)
                                             return Hakaze;
                                     }
                                 }
@@ -608,8 +608,8 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte levels)
             {
-                var gauge = GetJobGauge<SAMGauge>();
-                var SamKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_KenkiOvercapAmount);
+                SAMGauge gauge = GetJobGauge<SAMGauge>();
+                int SamKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_ST_KenkiOvercapAmount);
 
                 if (actionID == Kasha)
                 {
@@ -648,8 +648,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Mangetsu)
                 {
-                    var gauge = GetJobGauge<SAMGauge>();
-                    var SamAOEKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_AoE_KenkiOvercapAmount);
+                    SAMGauge gauge = GetJobGauge<SAMGauge>();
+                    int SamAOEKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_AoE_KenkiOvercapAmount);
 
                     if (IsEnabled(CustomComboPreset.SAM_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.SAM_VariantCure))
                         return Variant.VariantCure;
@@ -665,7 +665,7 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Hagakure) && OriginalHook(Iaijutsu) == Setsugekka && LevelChecked(Hagakure))
                             return Hagakure;
-                      
+
                         if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_Guren) && ActionReady(Guren) && gauge.Kenki >= 25)
                             return Guren;
 
@@ -744,7 +744,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (lastComboMove == Hakaze && Shifu.LevelChecked())
                             return Shifu;
 
-                        if (gauge.Sen.HasFlag(Sen.KA) == false || GetBuffRemainingTime(Buffs.Fuka) < GetBuffRemainingTime(Buffs.Fugetsu) || !HasEffect(Buffs.Fuka) && Hakaze.LevelChecked())
+                        if (gauge.Sen.HasFlag(Sen.KA) == false || GetBuffRemainingTime(Buffs.Fuka) < GetBuffRemainingTime(Buffs.Fugetsu) || (!HasEffect(Buffs.Fuka) && Hakaze.LevelChecked()))
                             return Hakaze;
                     }
 
@@ -763,8 +763,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Oka)
                 {
-                    var gauge = GetJobGauge<SAMGauge>();
-                    var SamAOEKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_AoE_KenkiOvercapAmount);
+                    SAMGauge gauge = GetJobGauge<SAMGauge>();
+                    int SamAOEKenkiOvercapAmount = PluginConfiguration.GetCustomIntValue(Config.SAM_AoE_KenkiOvercapAmount);
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_Overcap) && IsNotEnabled(CustomComboPreset.SAM_AoE_OkaCombo_TwoTarget) && gauge.Kenki >= SamAOEKenkiOvercapAmount && Kyuten.LevelChecked() && CanWeave(actionID))
                         return Kyuten;
@@ -822,7 +822,7 @@ namespace XIVSlothCombo.Combos.PvE
                     }
                     if (comboTime > 0 && Oka.LevelChecked())
                     {
-                        if (lastComboMove == Fuko || lastComboMove == Fuga)
+                        if (lastComboMove is Fuko or Fuga)
                             return Oka;
                     }
 
@@ -839,7 +839,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                var gauge = GetJobGauge<SAMGauge>();
+                SAMGauge gauge = GetJobGauge<SAMGauge>();
 
                 if (actionID == MeikyoShisui)
                 {
@@ -868,7 +868,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                var gauge = GetJobGauge<SAMGauge>();
+                SAMGauge gauge = GetJobGauge<SAMGauge>();
                 if (actionID == Iaijutsu)
                 {
                     if (IsEnabled(CustomComboPreset.SAM_Iaijutsu_Shoha) && Shoha.LevelChecked() && gauge.MeditationStacks >= 3 && CanSpellWeave(actionID))
@@ -891,7 +891,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                var gauge = GetJobGauge<SAMGauge>();
+                SAMGauge gauge = GetJobGauge<SAMGauge>();
                 if (actionID == Shinten)
                 {
                     if (IsEnabled(CustomComboPreset.SAM_Shinten_Shoha_Senei) && IsOffCooldown(Senei) && Senei.LevelChecked())
@@ -911,7 +911,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                var gauge = GetJobGauge<SAMGauge>();
+                SAMGauge gauge = GetJobGauge<SAMGauge>();
                 if (actionID == Kyuten)
                 {
                     if (IsOffCooldown(Guren) && Guren.LevelChecked())
@@ -960,7 +960,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == Gyoten)
                 {
-                    var gauge = GetJobGauge<SAMGauge>();
+                    SAMGauge gauge = GetJobGauge<SAMGauge>();
                     if (gauge.Kenki >= 10)
                     {
                         if (InMeleeRange())
