@@ -1,5 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Data
@@ -25,7 +24,7 @@ namespace XIVSlothCombo.Data
         {
             get
             {
-                var (cur, max) = Service.ComboCache.GetMaxCharges(ActionID);
+                (ushort cur, ushort max) = Service.ComboCache.GetMaxCharges(ActionID);
                 return cur == max
                     ? isCooldown
                     : cooldownElapsed < CooldownTotal;
@@ -58,7 +57,7 @@ namespace XIVSlothCombo.Data
                 if (cooldownTotal == 0)
                     return 0;
 
-                var (cur, max) = Service.ComboCache.GetMaxCharges(ActionID);
+                (ushort cur, ushort max) = Service.ComboCache.GetMaxCharges(ActionID);
 
                 if (cur == max)
                     return cooldownTotal;
@@ -70,10 +69,7 @@ namespace XIVSlothCombo.Data
                     ? 0
                     : total;
             }
-            set
-            {
-                cooldownTotal = value;
-            }
+            set => cooldownTotal = value;
         }
 
         /// <summary> Gets the cooldown time remaining. </summary>
@@ -91,7 +87,7 @@ namespace XIVSlothCombo.Data
         {
             get
             {
-                var (cur, _) = Service.ComboCache.GetMaxCharges(ActionID);
+                (ushort cur, ushort _) = Service.ComboCache.GetMaxCharges(ActionID);
 
                 return !IsCooldown
                     ? cur
@@ -107,7 +103,7 @@ namespace XIVSlothCombo.Data
                 if (!IsCooldown)
                     return 0;
 
-                var (cur, _) = Service.ComboCache.GetMaxCharges(ActionID);
+                (ushort cur, ushort _) = Service.ComboCache.GetMaxCharges(ActionID);
 
                 return CooldownRemaining % (CooldownTotal / cur);
             }
