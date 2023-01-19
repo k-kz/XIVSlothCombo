@@ -112,9 +112,9 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if (actionID is Blizzard && LevelChecked(Freeze) && !Gauge.InUmbralIce) 
+                if (actionID is Blizzard && LevelChecked(Freeze) && !Gauge.InUmbralIce)
                     return Blizzard3;
-                if (actionID is Freeze && !LevelChecked(Freeze)) 
+                if (actionID is Freeze && !LevelChecked(Freeze))
                     return Blizzard2;
                 return actionID;
             }
@@ -137,7 +137,7 @@ namespace XIVSlothCombo.Combos.PvE
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLM_LeyLines;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => 
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
                 actionID is LeyLines && HasEffect(Buffs.LeyLines) && LevelChecked(BetweenTheLines) ? BetweenTheLines : actionID;
         }
 
@@ -148,7 +148,7 @@ namespace XIVSlothCombo.Combos.PvE
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
                 actionID is AetherialManipulation &&
                 ActionReady(BetweenTheLines) &&
-                HasEffect(Buffs.LeyLines) && 
+                HasEffect(Buffs.LeyLines) &&
                 !HasEffect(Buffs.CircleOfPower) &&
                 !IsMoving
                 ? BetweenTheLines : actionID;
@@ -158,7 +158,7 @@ namespace XIVSlothCombo.Combos.PvE
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLM_Mana;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => 
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
                 actionID is Transpose && Gauge.InUmbralIce && LevelChecked(UmbralSoul) ? UmbralSoul : actionID;
         }
 
@@ -170,8 +170,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Flare)
                 {
-                    var currentMP = LocalPlayer.CurrentMp;
-                    var polyToStore = PluginConfiguration.GetCustomIntValue(Config.BLM_PolyglotsStored);
+                    uint currentMP = LocalPlayer.CurrentMp;
+                    int polyToStore = PluginConfiguration.GetCustomIntValue(Config.BLM_PolyglotsStored);
 
                     if (IsEnabled(CustomComboPreset.BLM_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BLM_VariantCure))
                         return Variant.VariantCure;
@@ -190,7 +190,7 @@ namespace XIVSlothCombo.Combos.PvE
                             return Manafont;
                         }
 
-                        if ((Gauge.InAstralFire && currentMP <= MP.FireAoE && IsOffCooldown(Manafont) && Gauge.HasPolyglotStacks()) || (IsOnCooldown(Manafont) && (GetCooldownRemainingTime(Manafont) >= 30 && Gauge.PolyglotStacks > polyToStore)))
+                        if ((Gauge.InAstralFire && currentMP <= MP.FireAoE && IsOffCooldown(Manafont) && Gauge.HasPolyglotStacks()) || (IsOnCooldown(Manafont) && GetCooldownRemainingTime(Manafont) >= 30 && Gauge.PolyglotStacks > polyToStore))
                         {
                             return Foul;
                         }
@@ -203,8 +203,8 @@ namespace XIVSlothCombo.Combos.PvE
                         uint thunderAOE = OriginalHook(Thunder2); //Grab whichever Thunder AoE player can use
                         if (ThunderList.TryGetValue(thunderAOE, out ushort dotDebuffID))
                         {
-                            var thunderAOEDebuff = TargetHasEffect(dotDebuffID);
-                            var thunderAOETimer = FindTargetEffect(dotDebuffID);
+                            bool thunderAOEDebuff = TargetHasEffect(dotDebuffID);
+                            Status? thunderAOETimer = FindTargetEffect(dotDebuffID);
 
                             if (LevelChecked(thunderAOE))
                             {
@@ -238,7 +238,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 return Flare;
                             }
                             else if (currentMP >= MP.FireAoE)
-                            {                                
+                            {
                                 return fireAoEID;
                             }
                         }
@@ -288,14 +288,14 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Scathe)
                 {
-                    var canWeave = CanSpellWeave(actionID);
-                    var currentMP = LocalPlayer.CurrentMp;
-                    var astralFireRefresh = PluginConfiguration.GetCustomFloatValue(Config.BLM_AstralFireRefresh) * 1000;
+                    bool canWeave = CanSpellWeave(actionID);
+                    uint currentMP = LocalPlayer.CurrentMp;
+                    float astralFireRefresh = PluginConfiguration.GetCustomFloatValue(Config.BLM_AstralFireRefresh) * 1000;
 
                     //var thunder = TargetHasEffect(Debuffs.Thunder);
-                    var thunder3 = TargetHasEffect(Debuffs.Thunder3);
+                    bool thunder3 = TargetHasEffect(Debuffs.Thunder3);
                     //var thunderDuration = FindTargetEffect(Debuffs.Thunder);
-                    var thunder3Duration = FindTargetEffect(Debuffs.Thunder3);
+                    Status? thunder3Duration = FindTargetEffect(Debuffs.Thunder3);
 
                     //DotRecast thunderRecast = delegate (int duration)
                     //{
@@ -351,7 +351,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 // First Triplecast
                                 if (lastComboMove != Triplecast && !HasEffect(Buffs.Triplecast) && HasCharges(Triplecast))
                                 {
-                                    var triplecastMP = 7600;
+                                    int triplecastMP = 7600;
                                     if (IsEnabled(CustomComboPreset.BLM_Simple_OpenerAlternate))
                                     {
                                         triplecastMP = 6000;
@@ -473,7 +473,7 @@ namespace XIVSlothCombo.Combos.PvE
                     // Handle movement
                     if (IsEnabled(CustomComboPreset.BLM_Simple_CastMovement) && InCombat())
                     {
-                        var movementTimeThreshold = PluginConfiguration.GetCustomFloatValue(Config.BLM_MovementTime);
+                        float movementTimeThreshold = PluginConfiguration.GetCustomFloatValue(Config.BLM_MovementTime);
                         double deltaTime = (DateTime.Now - previousTime).TotalSeconds;
                         previousTime = DateTime.Now;
                         if (IsMoving)
@@ -505,7 +505,7 @@ namespace XIVSlothCombo.Combos.PvE
                                         uint dot = OriginalHook(Thunder); //Grab the appropriate DoT Action
                                         Status? dotDebuff = FindTargetEffect(ThunderList[dot]); //Match it with it's Debuff ID, and check for the Debuff
 
-                                        if (dotDebuff is null || dotDebuff?.RemainingTime <= 4) 
+                                        if (dotDebuff is null || dotDebuff?.RemainingTime <= 4)
                                             return dot; //Use appropriate DoT Action
                                     }
                                 }
@@ -535,7 +535,7 @@ namespace XIVSlothCombo.Combos.PvE
                         // Thunder uptime
                         if (IsEnabled(CustomComboPreset.BLM_Thunder) && Gauge.ElementTimeRemaining >= astralFireRefresh)
                         {
-                            if (!ThunderList.ContainsKey(lastComboMove) && 
+                            if (!ThunderList.ContainsKey(lastComboMove) &&
                                 !TargetHasEffect(Debuffs.Thunder2) && !TargetHasEffect(Debuffs.Thunder4))
                             {
                                 if (HasEffect(Buffs.Thundercloud) || (IsEnabled(CustomComboPreset.BLM_ThunderUptime) && currentMP >= MP.Thunder))
@@ -713,7 +713,7 @@ namespace XIVSlothCombo.Combos.PvE
                         // Use Xenoglossy if Amplifier/Triplecast/Leylines/Manafont is available to weave
                         if (lastComboMove != Xenoglossy && Gauge.HasPolyglotStacks() && LevelChecked(Xenoglossy) && Gauge.ElementTimeRemaining >= astralFireRefresh)
                         {
-                            var pooledPolyglotStacks = IsEnabled(CustomComboPreset.BLM_Simple_XenoPooling) ? 1 : 0;
+                            int pooledPolyglotStacks = IsEnabled(CustomComboPreset.BLM_Simple_XenoPooling) ? 1 : 0;
                             if (IsEnabled(CustomComboPreset.BLM_Simple_Buffs) && ActionReady(Amplifier))
                             {
                                 return Xenoglossy;
@@ -796,12 +796,12 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Scathe)
                 {
-                    var canWeave = CanSpellWeave(actionID);
-                    var canDelayedWeave = CanWeave(actionID, 0.0) && GetCooldown(actionID).CooldownRemaining < 0.7;
-                    var currentMP = LocalPlayer.CurrentMp;
-                    var astralFireRefresh = PluginConfiguration.GetCustomFloatValue(Config.BLM_AstralFireRefresh) * 1000;
-                    var thunder3 = TargetHasEffect(Debuffs.Thunder3);
-                    var thunder3Duration = FindTargetEffect(Debuffs.Thunder3);
+                    bool canWeave = CanSpellWeave(actionID);
+                    bool canDelayedWeave = CanWeave(actionID, 0.0) && GetCooldown(actionID).CooldownRemaining < 0.7;
+                    uint currentMP = LocalPlayer.CurrentMp;
+                    float astralFireRefresh = PluginConfiguration.GetCustomFloatValue(Config.BLM_AstralFireRefresh) * 1000;
+                    bool thunder3 = TargetHasEffect(Debuffs.Thunder3);
+                    Status? thunder3Duration = FindTargetEffect(Debuffs.Thunder3);
 
                     DotRecast thunder3Recast = delegate (int duration)
                     {
@@ -1097,7 +1097,7 @@ namespace XIVSlothCombo.Combos.PvE
                             if ((HasEffect(Buffs.LeyLines) && GetBuffRemainingTime(Buffs.LeyLines) >= 15) || HasEffect(Buffs.Firestarter) ||
                                  lastComboMove == Xenoglossy || lastComboMove == Thunder3 || (IsOffCooldown(All.Swiftcast) && (Gauge.PolyglotStacks == 2)))
                             {
-                                if (lastComboMove != Despair && lastComboMove != Fire4)
+                                if (lastComboMove is not Despair and not Fire4)
                                 {
                                     return Transpose;
                                 }
@@ -1161,10 +1161,10 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Scathe)
                 {
-                    var canWeave = CanSpellWeave(actionID);
-                    var currentMP = LocalPlayer.CurrentMp;
-                    var thunder3 = TargetHasEffect(Debuffs.Thunder3);
-                    var thunder3Duration = FindTargetEffect(Debuffs.Thunder3);
+                    bool canWeave = CanSpellWeave(actionID);
+                    uint currentMP = LocalPlayer.CurrentMp;
+                    bool thunder3 = TargetHasEffect(Debuffs.Thunder3);
+                    Status? thunder3Duration = FindTargetEffect(Debuffs.Thunder3);
 
                     DotRecast thunder3Recast = delegate (int duration)
                     {
@@ -1204,7 +1204,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 // First Triplecast
                                 if (lastComboMove != Triplecast && !HasEffect(Buffs.Triplecast) && HasCharges(Triplecast))
                                 {
-                                    var triplecastMP = 7600;
+                                    int triplecastMP = 7600;
                                     if (currentMP <= triplecastMP)
                                     {
                                         return Triplecast;
