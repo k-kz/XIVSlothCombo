@@ -10,7 +10,6 @@ using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Data;
-using XIVSlothCombo.Extensions;
 using XIVSlothCombo.Services;
 
 #if DEBUG
