@@ -1,7 +1,7 @@
-﻿using Dalamud.Interface.Colors;
+﻿using System.Numerics;
+using Dalamud.Interface.Colors;
 using Dalamud.Utility;
 using ImGuiNET;
-using System.Numerics;
 
 namespace XIVSlothCombo.Window.Tabs
 {
