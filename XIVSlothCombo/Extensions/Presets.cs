@@ -1,5 +1,5 @@
-﻿using Dalamud.Utility;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Dalamud.Utility;
 using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Combos;
 
@@ -14,7 +14,7 @@ namespace XIVSlothCombo.Extensions
         ///<summary> Retrieves the <see cref="ReplaceSkillAttribute"/> for the preset if it exists.</summary>
         internal static ReplaceSkillAttribute? GetReplaceAttribute(this CustomComboPreset preset)
         {
-            if (replaceSkillCache.TryGetValue(preset, out var replaceSkillAttribute))
+            if (replaceSkillCache.TryGetValue(preset, out ReplaceSkillAttribute? replaceSkillAttribute))
             {
                 return replaceSkillAttribute;
             }
@@ -26,7 +26,7 @@ namespace XIVSlothCombo.Extensions
         ///<summary> Retrieves the <see cref="CustomComboInfoAttribute"/> for the preset if it exists.</summary>
         internal static CustomComboInfoAttribute? GetComboAttribute(this CustomComboPreset preset)
         {
-            if (comboInfoCache.TryGetValue(preset, out var customComboInfoAttribute))
+            if (comboInfoCache.TryGetValue(preset, out CustomComboInfoAttribute? customComboInfoAttribute))
             {
                 return customComboInfoAttribute;
             }
@@ -39,7 +39,7 @@ namespace XIVSlothCombo.Extensions
         ///<summary> Retrieves the <see cref="HoverInfoAttribute"/> for the preset if it exists.</summary>
         internal static HoverInfoAttribute? GetHoverAttribute(this CustomComboPreset preset)
         {
-            if (hoverInfoCache.TryGetValue(preset, out var hoverInfoAttribute))
+            if (hoverInfoCache.TryGetValue(preset, out HoverInfoAttribute? hoverInfoAttribute))
             {
                 return hoverInfoAttribute;
             }
