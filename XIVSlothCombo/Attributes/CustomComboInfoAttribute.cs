@@ -1,9 +1,9 @@
-using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Lumina.Excel.GeneratedSheets;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.Services;
 
