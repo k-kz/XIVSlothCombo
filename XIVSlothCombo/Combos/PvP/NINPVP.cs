@@ -1,4 +1,5 @@
 ﻿using XIVSlothCombo.CustomComboNS;
+using XIVSlothCombo.Data;
 
 namespace XIVSlothCombo.Combos.PvP
 {
@@ -61,9 +62,9 @@ namespace XIVSlothCombo.Combos.PvP
             {
                 if (actionID is SpinningEdge or GustSlash or AeolianEdge)
                 {
-                    var threeMudrasCD = GetCooldown(ThreeMudra);
-                    var fumaCD = GetCooldown(FumaShuriken);
-                    var bunshinStacks = HasEffect(Buffs.Bunshin) ? GetBuffStacks(Buffs.Bunshin) : 0;
+                    CooldownData threeMudrasCD = GetCooldown(ThreeMudra);
+                    CooldownData fumaCD = GetCooldown(FumaShuriken);
+                    float bunshinStacks = HasEffect(Buffs.Bunshin) ? GetBuffStacks(Buffs.Bunshin) : 0;
                     bool raijuLocked = HasEffect(Debuffs.SeakedForkedRaiju);
                     bool meisuiLocked = HasEffect(Debuffs.SealedMeisui);
                     bool hyoshoLocked = HasEffect(Debuffs.SealedHyoshoRanryu);
@@ -72,12 +73,11 @@ namespace XIVSlothCombo.Combos.PvP
                     bool hutonLocked = HasEffect(Debuffs.SealedHuton);
                     bool mudraMode = HasEffect(Buffs.ThreeMudra);
                     bool canWeave = CanWeave(SpinningEdge);
-                    var jobMaxHp = LocalPlayer.MaxHp;
-                    var threshold = GetOptionValue(Config.NINPvP_Meisui_ST);
-                    var maxHPThreshold = jobMaxHp - 8000;
-                    var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
+                    uint jobMaxHp = LocalPlayer.MaxHp;
+                    int threshold = GetOptionValue(Config.NINPvP_Meisui_ST);
+                    uint maxHPThreshold = jobMaxHp - 8000;
+                    float remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
                     bool inMeisuiRange = threshold >= (remainingPercentage * 100);
-
 
                     if (HasEffect(Buffs.Hidden))
                         return OriginalHook(Assassinate);
@@ -124,11 +124,11 @@ namespace XIVSlothCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                if (actionID == FumaShuriken)
+                if (actionID is FumaShuriken)
                 {
-                    var threeMudrasCD = GetCooldown(ThreeMudra);
-                    var fumaCD = GetCooldown(FumaShuriken);
-                    var bunshinStacks = HasEffect(Buffs.Bunshin) ? GetBuffStacks(Buffs.Bunshin) : 0;
+                    CooldownData threeMudrasCD = GetCooldown(ThreeMudra);
+                    CooldownData fumaCD = GetCooldown(FumaShuriken);
+                    float bunshinStacks = HasEffect(Buffs.Bunshin) ? GetBuffStacks(Buffs.Bunshin) : 0;
                     bool raijuLocked = HasEffect(Debuffs.SeakedForkedRaiju);
                     bool meisuiLocked = HasEffect(Debuffs.SealedMeisui);
                     bool hyoshoLocked = HasEffect(Debuffs.SealedHyoshoRanryu);
@@ -137,10 +137,10 @@ namespace XIVSlothCombo.Combos.PvP
                     bool hutonLocked = HasEffect(Debuffs.SealedHuton);
                     bool mudraMode = HasEffect(Buffs.ThreeMudra);
                     bool canWeave = CanWeave(SpinningEdge);
-                    var jobMaxHp = LocalPlayer.MaxHp;
-                    var threshold = GetOptionValue(Config.NINPvP_Meisui_AoE);
-                    var maxHPThreshold = jobMaxHp - 8000;
-                    var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
+                    uint jobMaxHp = LocalPlayer.MaxHp;
+                    int threshold = GetOptionValue(Config.NINPvP_Meisui_AoE);
+                    uint maxHPThreshold = jobMaxHp - 8000;
+                    float remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
                     bool inMeisuiRange = threshold >= (remainingPercentage * 100);
 
                     if (HasEffect(Buffs.Hidden))
