@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
-using System.Collections.Generic;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.CustomComboNS.Functions;
@@ -128,7 +128,7 @@ namespace XIVSlothCombo.Combos.PvE
                 SGE_ST_Heal_Soteria = new("SGE_ST_Heal_Soteria"),
                 SGE_ST_Heal_Diagnosis = new("SGE_ST_Heal_Diagnosis"),
                 SGE_ST_Heal_Druochole = new("SGE_ST_Heal_Druochole"),
-                SGE_ST_Heal_Taurochole = new("SGE_ST_Heal_Taurochole");                
+                SGE_ST_Heal_Taurochole = new("SGE_ST_Heal_Taurochole");
             #endregion
 
             internal static UserInt
@@ -137,7 +137,7 @@ namespace XIVSlothCombo.Combos.PvE
 
         internal static class Traits
         {
-            internal const ushort 
+            internal const ushort
                 EnhancedKerachole = 375;
         }
 
@@ -271,7 +271,8 @@ namespace XIVSlothCombo.Combos.PvE
                     ActionFound = (!Config.SGE_ST_DPS_Adv_D2 && DosisList.ContainsKey(actionID)) || //not restricted to Dosis 2
                                   actionID is Dosis2 ||                                             //Dosis 2 is always allowed
                                   GroupInstants;                                                    //Group Instants on Toxikon
-                } else ActionFound = DosisList.ContainsKey(actionID); //default handling
+                }
+                else ActionFound = DosisList.ContainsKey(actionID); //default handling
 
                 if (ActionFound)
                 {
@@ -352,7 +353,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (GroupInstants)
                     {
                         if (HasEffect(Buffs.Eukrasia)) return OriginalHook(Dosis);
-                        
+
                         if (Config.SGE_ST_DPS_Adv_GroupInstants_Addl.Count == 2)
                         {
                             // Toxikon
