@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using Newtonsoft.Json;
 using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Data
@@ -19,7 +14,7 @@ namespace XIVSlothCombo.Data
         public static RepoCheck? FetchCurrentRepo()
         {
             FileInfo? f = Service.Interface.AssemblyLocation;
-            var manifest = Path.Join(f.DirectoryName, "XIVSlothCombo.json");
+            string manifest = Path.Join(f.DirectoryName, "XIVSlothCombo.json");
 
             if (File.Exists(manifest))
             {
