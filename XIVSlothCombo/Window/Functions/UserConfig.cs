@@ -1,11 +1,11 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+﻿using System;
+using System.Linq;
+using System.Numerics;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Utility;
 using ImGuiNET;
-using System;
-using System.Linq;
-using System.Numerics;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.Combos.PvP;
@@ -56,7 +56,7 @@ namespace XIVSlothCombo.Window.Functions
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudWhite);
                     ImGui.Text($"{sliderDescription}");
                     Vector2 height = ImGui.GetItemRectSize();
-                    float lines = (height.Y / ImGui.GetFontSize());
+                    float lines = height.Y / ImGui.GetFontSize();
                     Vector2 textLength = ImGui.CalcTextSize(sliderDescription);
                     string newLines = "";
                     for (int i = 1; i < lines; i++)
@@ -157,7 +157,7 @@ namespace XIVSlothCombo.Window.Functions
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudWhite);
                     ImGui.Text($"{sliderDescription}");
                     Vector2 height = ImGui.GetItemRectSize();
-                    float lines = (height.Y / ImGui.GetFontSize());
+                    float lines = height.Y / ImGui.GetFontSize();
                     Vector2 textLength = ImGui.CalcTextSize(sliderDescription);
                     string newLines = "";
                     for (int i = 1; i < lines; i++)
@@ -252,7 +252,7 @@ namespace XIVSlothCombo.Window.Functions
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudWhite);
                     ImGui.Text($"{sliderDescription}");
                     Vector2 height = ImGui.GetItemRectSize();
-                    float lines = (height.Y / ImGui.GetFontSize());
+                    float lines = height.Y / ImGui.GetFontSize();
                     Vector2 textLength = ImGui.CalcTextSize(sliderDescription);
                     string newLines = "";
                     for (int i = 1; i < lines; i++)
@@ -1459,7 +1459,7 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize Spirits Within / Expiacion", "", 2);
             }
 
-            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Sheltron || preset == CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)
+            if (preset is CustomComboPreset.PLD_ST_AdvancedMode_Sheltron or CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)
             {
                 UserConfig.DrawSliderInt(50, 100, PLD.Config.PLD_SheltronOption, "Minimum Oath gauge required.", sliderIncrement: 5);
             }
@@ -1526,7 +1526,7 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_ST_oGCD_OnAction_Adv, "Advanced Action Options.", "Changes which action this option will replace.", isConditionalChoice: true);
                 if (RDM.Config.RDM_ST_oGCD_OnAction_Adv)
                 {
-                    ImGui.Indent();ImGui.Spacing();
+                    ImGui.Indent(); ImGui.Spacing();
                     UserConfig.DrawHorizontalMultiChoice(RDM.Config.RDM_ST_oGCD_OnAction, "Jolts", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
                     UserConfig.DrawHorizontalMultiChoice(RDM.Config.RDM_ST_oGCD_OnAction, "Fleche", "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
                     UserConfig.DrawHorizontalMultiChoice(RDM.Config.RDM_ST_oGCD_OnAction, "Riposte", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
@@ -1545,7 +1545,7 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_ST_oGCD_CorpACorps, "Corp-a-Corps", "", isConditionalChoice: true);
                 if (RDM.Config.RDM_ST_oGCD_CorpACorps)
                 {
-                    ImGui.Indent();ImGui.Spacing();
+                    ImGui.Indent(); ImGui.Spacing();
                     UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_ST_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
                     UserConfig.DrawAdditionalBoolChoice(RDM.Config.RDM_ST_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
                     ImGui.Unindent();
@@ -1733,7 +1733,7 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset is CustomComboPreset.SGE_AoE_Heal_Kerachole)
                 UserConfig.DrawAdditionalBoolChoice(SGE.Config.SGE_AoE_Heal_KeracholeTrait,
-                    "Check for Enhanced Kerachole Trait (Heal over Time)", 
+                    "Check for Enhanced Kerachole Trait (Heal over Time)",
                     "Enabling this will prevent Kerachole from being used when the Heal over Time trait is unavailable.");
 
             if (preset is CustomComboPreset.SGE_Eukrasia)
