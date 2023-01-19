@@ -1,16 +1,16 @@
-﻿using Dalamud.Interface.Colors;
-using Dalamud.Utility;
-using ImGuiNET;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 using System.Text;
+using Dalamud.Interface.Colors;
+using Dalamud.Utility;
+using ImGuiNET;
 using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Extensions;
 using XIVSlothCombo.Services;
+using SysGeneric = System.Collections.Generic;
 
 namespace XIVSlothCombo.Window.Functions
 {
@@ -18,11 +18,11 @@ namespace XIVSlothCombo.Window.Functions
     {
         internal static void DrawPreset(CustomComboPreset preset, CustomComboInfoAttribute info, ref int i)
         {
-            var enabled = Service.Configuration.IsEnabled(preset);
-            var secret = PluginConfiguration.IsSecret(preset);
-            var conflicts = Service.Configuration.GetConflicts(preset);
-            var parent = PluginConfiguration.GetParent(preset);
-            var blueAttr = preset.GetAttribute<BlueInactiveAttribute>();
+            bool enabled = Service.Configuration.IsEnabled(preset);
+            bool secret = PluginConfiguration.IsSecret(preset);
+            CustomComboPreset[] conflicts = Service.Configuration.GetConflicts(preset);
+            CustomComboPreset? parent = PluginConfiguration.GetParent(preset);
+            BlueInactiveAttribute? blueAttr = preset.GetAttribute<BlueInactiveAttribute>();
 
             ImGui.PushItemWidth(200);
 
@@ -32,7 +32,7 @@ namespace XIVSlothCombo.Window.Functions
                 {
                     EnableParentPresets(preset);
                     Service.Configuration.EnabledActions.Add(preset);
-                    foreach (var conflict in conflicts)
+                    foreach (CustomComboPreset conflict in conflicts)
                     {
                         Service.Configuration.EnabledActions.Remove(conflict);
                     }
@@ -61,7 +61,7 @@ namespace XIVSlothCombo.Window.Functions
                 ImGui.PushItemWidth(length.Length());
             }
 
-                ImGui.TextWrapped($"{info.Description}");
+            ImGui.TextWrapped($"{info.Description}");
 
             if (preset.GetHoverAttribute() != null)
             {
@@ -79,7 +79,7 @@ namespace XIVSlothCombo.Window.Functions
 
             UserConfigItems.Draw(preset, enabled);
 
-            if (preset == CustomComboPreset.NIN_ST_SimpleMode_BalanceOpener || preset == CustomComboPreset.NIN_ST_AdvancedMode_BalanceOpener)
+            if (preset is CustomComboPreset.NIN_ST_SimpleMode_BalanceOpener or CustomComboPreset.NIN_ST_AdvancedMode_BalanceOpener)
             {
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() + length.Length());
                 if (ImGui.Button($"Image of rotation###ninrtn{i}"))
@@ -90,9 +90,9 @@ namespace XIVSlothCombo.Window.Functions
 
             if (conflicts.Length > 0)
             {
-                var conflictText = conflicts.Select(conflict =>
+                string conflictText = conflicts.Select(conflict =>
                 {
-                    var conflictInfo = conflict.GetComboAttribute();
+                    CustomComboInfoAttribute? conflictInfo = conflict.GetComboAttribute();
 
                     return $"\n - {conflictInfo.FancyName}";
 
@@ -129,18 +129,18 @@ namespace XIVSlothCombo.Window.Functions
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
                 ImGui.TextWrapped($"Part of normal combo{(varientparents.ParentPresets.Length > 1 ? "s" : "")}:");
                 StringBuilder builder = new();
-                foreach (var par in varientparents.ParentPresets)
+                foreach (CustomComboPreset par in varientparents.ParentPresets)
                 {
                     builder.Insert(0, $"{par.GetAttribute<CustomComboInfoAttribute>().FancyName}");
-                    var par2 = par;
+                    CustomComboPreset par2 = par;
                     while (PluginConfiguration.GetParent(par2) != null)
                     {
-                        var subpar = PluginConfiguration.GetParent(par2)!;
-                        builder.Insert(0,$"{subpar.GetAttribute<CustomComboInfoAttribute>().FancyName} -> ");
+                        CustomComboPreset? subpar = PluginConfiguration.GetParent(par2)!;
+                        builder.Insert(0, $"{subpar.GetAttribute<CustomComboInfoAttribute>().FancyName} -> ");
                         par2 = subpar.Value;
 
                     }
-                    
+
                     ImGui.TextWrapped($"- {builder}");
                     builder.Clear();
                 }
@@ -153,13 +153,13 @@ namespace XIVSlothCombo.Window.Functions
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
                 ImGui.TextWrapped($"Part of normal combo{(varientparents.ParentPresets.Length > 1 ? "s" : "")}:");
                 StringBuilder builder = new();
-                foreach (var par in bozjaparents.ParentPresets)
+                foreach (CustomComboPreset par in bozjaparents.ParentPresets)
                 {
                     builder.Insert(0, $"{par.GetAttribute<CustomComboInfoAttribute>().FancyName}");
-                    var par2 = par;
+                    CustomComboPreset par2 = par;
                     while (PluginConfiguration.GetParent(par2) != null)
                     {
-                        var subpar = PluginConfiguration.GetParent(par2)!;
+                        CustomComboPreset? subpar = PluginConfiguration.GetParent(par2)!;
                         builder.Insert(0, $"{subpar.GetAttribute<CustomComboInfoAttribute>().FancyName} -> ");
                         par2 = subpar.Value;
 
@@ -177,13 +177,13 @@ namespace XIVSlothCombo.Window.Functions
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
                 ImGui.TextWrapped($"Part of normal combo{(varientparents.ParentPresets.Length > 1 ? "s" : "")}:");
                 StringBuilder builder = new();
-                foreach (var par in eurekaparents.ParentPresets)
+                foreach (CustomComboPreset par in eurekaparents.ParentPresets)
                 {
                     builder.Insert(0, $"{par.GetAttribute<CustomComboInfoAttribute>().FancyName}");
-                    var par2 = par;
+                    CustomComboPreset par2 = par;
                     while (PluginConfiguration.GetParent(par2) != null)
                     {
-                        var subpar = PluginConfiguration.GetParent(par2)!;
+                        CustomComboPreset? subpar = PluginConfiguration.GetParent(par2)!;
                         builder.Insert(0, $"{subpar.GetAttribute<CustomComboInfoAttribute>().FancyName} -> ");
                         par2 = subpar.Value;
 
@@ -197,8 +197,8 @@ namespace XIVSlothCombo.Window.Functions
 
             i++;
 
-            var hideChildren = Service.Configuration.HideChildren;
-            var children = presetChildren[preset];
+            bool hideChildren = Service.Configuration.HideChildren;
+            (CustomComboPreset Preset, CustomComboInfoAttribute Info)[] children = presetChildren[preset];
 
             if (children.Length > 0)
             {
@@ -206,12 +206,12 @@ namespace XIVSlothCombo.Window.Functions
                 {
                     ImGui.Indent();
 
-                    foreach (var (childPreset, childInfo) in children)
+                    foreach ((CustomComboPreset childPreset, CustomComboInfoAttribute childInfo) in children)
                     {
                         if (Service.Configuration.HideConflictedCombos)
                         {
-                            var conflictOriginals = Service.Configuration.GetConflicts(childPreset);    // Presets that are contained within a ConflictedAttribute
-                            var conflictsSource = Service.Configuration.GetAllConflicts();              // Presets with the ConflictedAttribute
+                            CustomComboPreset[] conflictOriginals = Service.Configuration.GetConflicts(childPreset);        // Presets that are contained within a ConflictedAttribute
+                            SysGeneric.List<CustomComboPreset> conflictsSource = Service.Configuration.GetAllConflicts();   // Presets with the ConflictedAttribute
 
                             if (!conflictsSource.Where(x => x == childPreset || x == preset).Any() || conflictOriginals.Length == 0)
                             {
@@ -239,7 +239,7 @@ namespace XIVSlothCombo.Window.Functions
                     }
 
                     ImGui.Unindent();
-                }   
+                }
                 else
                 {
                     i += AllChildren(presetChildren[preset]);
@@ -265,9 +265,9 @@ namespace XIVSlothCombo.Window.Functions
 
         internal static int AllChildren((CustomComboPreset Preset, CustomComboInfoAttribute Info)[] children)
         {
-            var output = 0;
+            int output = 0;
 
-            foreach (var (Preset, Info) in children)
+            foreach ((CustomComboPreset Preset, CustomComboInfoAttribute Info) in children)
             {
                 output++;
                 output += AllChildren(presetChildren[Preset]);
@@ -282,16 +282,17 @@ namespace XIVSlothCombo.Window.Functions
         /// <param name="preset"> Combo preset to enabled. </param>
         private static void EnableParentPresets(CustomComboPreset preset)
         {
-            var parentMaybe = PluginConfiguration.GetParent(preset);
+            CustomComboPreset? parentMaybe = PluginConfiguration.GetParent(preset);
 
             while (parentMaybe != null)
             {
-                var parent = parentMaybe.Value;
+                CustomComboPreset parent = parentMaybe.Value;
 
                 if (!Service.Configuration.EnabledActions.Contains(parent))
                 {
                     Service.Configuration.EnabledActions.Add(parent);
-                    foreach (var conflict in Service.Configuration.GetConflicts(parent))
+
+                    foreach (CustomComboPreset conflict in Service.Configuration.GetConflicts(parent))
                     {
                         Service.Configuration.EnabledActions.Remove(conflict);
                     }
