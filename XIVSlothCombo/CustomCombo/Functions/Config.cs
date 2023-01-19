@@ -18,7 +18,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
     {
         protected string pName;
         public UserData(string v) => pName = v;
-        public static implicit operator string(UserData o) => (o.pName);
+        public static implicit operator string(UserData o) => o.pName;
     }
 
     internal class UserFloat : UserData
@@ -42,8 +42,8 @@ namespace XIVSlothCombo.CustomComboNS.Functions
     internal class UserBoolArray : UserData
     {
         public UserBoolArray(string v) : base(v) { }
-        public int Count => PluginConfiguration.GetCustomBoolArrayValue(this.pName).Length;
-        public bool this[int index] => PluginConfiguration.GetCustomBoolArrayValue(this.pName)[index];
+        public int Count => PluginConfiguration.GetCustomBoolArrayValue(pName).Length;
+        public bool this[int index] => PluginConfiguration.GetCustomBoolArrayValue(pName)[index];
         public static implicit operator bool[](UserBoolArray o) => PluginConfiguration.GetCustomBoolArrayValue(o.pName);
     }
 
