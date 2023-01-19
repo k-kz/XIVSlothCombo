@@ -54,11 +54,11 @@ namespace XIVSlothCombo.Combos.PvP
                     bool starfallDance = HasEffect(Buffs.StarfallDance);
                     bool curingWaltzReady = !GetCooldown(CuringWaltz).IsCooldown;
                     bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
-                    var acclaimStacks = GetBuffStacks(Buffs.Acclaim);
+                    float acclaimStacks = GetBuffStacks(Buffs.Acclaim);
                     bool canWeave = CanWeave(actionID);
-                    var distance = GetTargetDistance();
-                    var HPThreshold = PluginConfiguration.GetCustomIntValue(Config.DNCPvP_WaltzThreshold);
-                    var HP = PlayerHealthPercentageHp();
+                    float distance = GetTargetDistance();
+                    int HPThreshold = PluginConfiguration.GetCustomIntValue(Config.DNCPvP_WaltzThreshold);
+                    float HP = PlayerHealthPercentageHp();
 
                     // Honing Dance Option
                     if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && distance <= 5)
