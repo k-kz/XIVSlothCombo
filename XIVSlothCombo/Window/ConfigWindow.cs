@@ -17,9 +17,7 @@ namespace XIVSlothCombo.Window
         internal static readonly Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> groupedPresets = GetGroupedPresets();
         internal static readonly Dictionary<CustomComboPreset, (CustomComboPreset Preset, CustomComboInfoAttribute Info)[]> presetChildren = GetPresetChildren();
 
-        internal static Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets()
-        {
-            return Enum
+        internal static Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets() => Enum
             .GetValues<CustomComboPreset>()
             .Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled)
             .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
@@ -31,11 +29,10 @@ namespace XIVSlothCombo.Window
             .ToDictionary(
                 tpl => tpl.Key,
                 tpl => tpl.ToList());
-        }
 
         internal static Dictionary<CustomComboPreset, (CustomComboPreset Preset, CustomComboInfoAttribute Info)[]> GetPresetChildren()
         {
-            var childCombos = Enum.GetValues<CustomComboPreset>().ToDictionary(
+            Dictionary<CustomComboPreset, List<CustomComboPreset>> childCombos = Enum.GetValues<CustomComboPreset>().ToDictionary(
                 tpl => tpl,
                 tpl => new List<CustomComboPreset>());
 
@@ -69,10 +66,7 @@ namespace XIVSlothCombo.Window
             Size = new Vector2(740, 490);
         }
 
-        public override void Draw()
-        {
-            DrawConfig();
-        }
+        public override void Draw() => DrawConfig();
 
         public void DrawConfig()
         {
@@ -123,7 +117,7 @@ namespace XIVSlothCombo.Window
 
         public void Dispose()
         {
-            
+
         }
     }
 }
