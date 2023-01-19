@@ -7,6 +7,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Services;
 using StructsObject = FFXIVClientStructs.FFXIV.Client.Game.Object;
+using LuminaSheets = Lumina.Excel.GeneratedSheets;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
 {
@@ -76,6 +77,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             if (CurrentTarget is null)
                 return 0;
+
             if (CurrentTarget is not BattleChara chara)
                 return 0;
 
@@ -86,6 +88,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             if (CurrentTarget is null)
                 return 0;
+
             if (CurrentTarget is not BattleChara chara)
                 return 0;
 
@@ -100,22 +103,23 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         {
             if (OurTarget is null)
             {
-                //Fallback to CurrentTarget
+                // Fallback to CurrentTarget
                 OurTarget = CurrentTarget;
                 if (OurTarget is null)
                     return false;
             }
 
-            //Humans
+            // Humans
             if (OurTarget.ObjectKind is ObjectKind.Player)
                 return true;
-            //AI
-            if (OurTarget is BattleNpc) return (OurTarget as BattleNpc).BattleNpcKind is not BattleNpcSubKind.Enemy;
+
+            // AI
+            if (OurTarget is BattleNpc)
+                return (OurTarget as BattleNpc).BattleNpcKind is not BattleNpcSubKind.Enemy;
             return false;
         }
 
-        /// <summary> Grabs healable target. Checks Soft Target then Hard Target. 
-        /// If Party UI Mouseover is enabled, find the target and return that. Else return the player. </summary>
+        /// <summary> Grabs healable target. Checks Soft Target then Hard Target. If Party UI Mouseover is enabled, find the target and return that. Else, return the player. </summary>
         /// <returns> GameObject of a player target. </returns>
         public static unsafe GameObject? GetHealTarget(bool checkMOPartyUI = false)
         {
@@ -135,6 +139,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
                     if (HasFriendlyTarget(uiTarget)) healTarget = uiTarget;
                 }
             }
+
             healTarget ??= LocalPlayer;
             return healTarget;
         }
@@ -157,8 +162,8 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <param name="target"> Target must be a game object that the player can normally click and target. </param>
         public static void SetTarget(GameObject? target) => Service.TargetManager.Target = target;
 
-        /// <summary> Checks if target is in appropriate range for targeting </summary>
-        /// <param name="target"> The target object to check </param>
+        /// <summary> Checks if target is in appropriate range for targeting. </summary>
+        /// <param name="target"> The target object to check. </param>
         public static bool IsInRange(GameObject? target)
         {
             if (target == null || target.YalmDistanceX >= 30)
@@ -170,11 +175,11 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         public static bool TargetNeedsPositionals()
         {
             if (!HasBattleTarget()) return false;
-            if (ActionWatching.BNpcSheet.TryGetValue(CurrentTarget.DataId, out Lumina.Excel.GeneratedSheets.BNpcBase? bnpc) && !bnpc.Unknown10) return true;
+            if (ActionWatching.BNpcSheet.TryGetValue(CurrentTarget.DataId, out LuminaSheets.BNpcBase? bnpc) && !bnpc.Unknown10) return true;
             return false;
         }
 
-        /// <summary> Attempts to target the given party member </summary>
+        /// <summary> Attempts to target the given party member. </summary>
         /// <param name="target"></param>
         protected static unsafe void TargetObject(TargetType target)
         {
@@ -263,16 +268,13 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             P8
         }
 
-        /// <summary>
-        /// Get angle to target.
-        /// </summary>
-        /// <returns>Angle relative to target</returns>
-        public float angleToTarget()
+        /// <summary> Get angle to target. </summary>
+        /// <returns> Angle relative to target. </returns>
+        public static float AngleToTarget()
         {
             if (CurrentTarget is null || LocalPlayer is null)
                 return 0;
-
-            if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
+            if (CurrentTarget is not BattleChara || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
                 return 0;
 
             Vector2 targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
@@ -288,31 +290,33 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             {
                 return 1;
             }
+
             if (regionDegrees is >= 135 and <= 225)
             {
                 return 2;
             }
+
             if (regionDegrees is >= 225 and <= 315)
             {
                 return 3;
             }
+
             if (regionDegrees is >= 315 or <= 45)
             {
                 return 4;
             }
+
             return 0;
         }
 
-        /// <summary>
-        /// Is player on target's rear.
-        /// </summary>
-        /// <returns>True or false.</returns>
-        public bool OnTargetsRear()
+        /// <summary> Is player on target's rear. </summary>
+        /// <returns> True or false. </returns>
+        public static bool OnTargetsRear()
         {
             if (CurrentTarget is null || LocalPlayer is null)
                 return false;
 
-            if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
+            if (CurrentTarget is not BattleChara || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
                 return false;
 
             Vector2 targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
@@ -328,19 +332,18 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             {
                 return true;
             }
+
             return false;
         }
 
-        /// <summary>
-        /// Is player on target's flank.
-        /// </summary>
-        /// <returns>True or false.</returns>
-        public bool OnTargetsFlank()
+        /// <summary> Is player on target's flank. </summary>
+        /// <returns> True or false. </returns>
+        public static bool OnTargetsFlank()
         {
             if (CurrentTarget is null || LocalPlayer is null)
                 return false;
 
-            if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
+            if (CurrentTarget is not BattleChara || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
                 return false;
 
             Vector2 targetPosition = new Vector2(CurrentTarget.Position.X, CurrentTarget.Position.Z);
@@ -362,6 +365,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             {
                 return true;
             }
+
             return false;
         }
 
