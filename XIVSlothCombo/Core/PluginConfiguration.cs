@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.Combos.PvE;
-using XIVSlothCombo.Services;
 using XIVSlothCombo.Extensions;
+using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Core
 {
@@ -250,15 +250,12 @@ namespace XIVSlothCombo.Core
 
         private bool GetResetValues(string config)
         {
-            if (ResetFeatureCatalog.TryGetValue(config, out var value)) return value;
+            if (ResetFeatureCatalog.TryGetValue(config, out bool value)) return value;
 
             return false;
         }
 
-        private void SetResetValues(string config, bool value)
-        {
-            ResetFeatureCatalog[config] = value;
-        }
+        private void SetResetValues(string config, bool value) => ResetFeatureCatalog[config] = value;
 
         public void ResetFeatures(string config, int[] values)
         {
@@ -267,14 +264,14 @@ namespace XIVSlothCombo.Core
             {
                 bool needToResetMessagePrinted = false;
 
-                var presets = Enum.GetValues<CustomComboPreset>().Cast<int>();
+                IEnumerable<int> presets = Enum.GetValues<CustomComboPreset>().Cast<int>();
 
                 foreach (int value in values)
                 {
                     Dalamud.Logging.PluginLog.Debug(value.ToString());
                     if (presets.Contains(value))
                     {
-                        var preset = Enum.GetValues<CustomComboPreset>()
+                        CustomComboPreset preset = Enum.GetValues<CustomComboPreset>()
                             .Where(preset => (int)preset == value)
                             .First();
 
@@ -286,14 +283,14 @@ namespace XIVSlothCombo.Core
                             needToResetMessagePrinted = !needToResetMessagePrinted;
                         }
 
-                        var info = preset.GetComboAttribute();
+                        CustomComboInfoAttribute? info = preset.GetComboAttribute();
                         Service.ChatGui.PrintError($"[XIVSlothCombo] - {info.JobName}: {info.FancyName}");
                         EnabledActions.Remove(preset);
                     }
                 }
-                
+
                 if (needToResetMessagePrinted)
-                Service.ChatGui.PrintError($"[XIVSlothCombo] Please re-enable these features to use them again. We apologise for the inconvenience");
+                    Service.ChatGui.PrintError($"[XIVSlothCombo] Please re-enable these features to use them again. We apologise for the inconvenience");
             }
             SetResetValues(config, true);
             Save();
