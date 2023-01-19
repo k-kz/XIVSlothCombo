@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using Dalamud.Game;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Objects.SubKinds;
-using DalamudStatus = Dalamud.Game.ClientState.Statuses; // conflicts with structs if not defined
+using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using XIVSlothCombo.Services;
+using DalamudStatus = Dalamud.Game.ClientState.Statuses;
+using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
+using LuminaSheets = Lumina.Excel;
 
 namespace XIVSlothCombo.Data
 {
@@ -50,7 +52,7 @@ namespace XIVSlothCombo.Data
         /// <returns> Status object or null. </returns>
         internal DalamudStatus.Status? GetStatus(uint statusID, GameObject? obj, uint? sourceID)
         {
-            var key = (statusID, obj?.ObjectId, sourceID);
+            (uint statusID, uint? ObjectId, uint? sourceID) key = (statusID, obj?.ObjectId, sourceID);
             if (statusCache.TryGetValue(key, out DalamudStatus.Status? found))
                 return found;
 
@@ -111,8 +113,8 @@ namespace XIVSlothCombo.Data
             if (job == 0 || level == 0)
                 return (0, 0);
 
-            var key = (actionID, job, level);
-            if (chargesCache.TryGetValue(key, out var found))
+            (uint actionID, uint job, byte level) key = (actionID, job, level);
+            if (chargesCache.TryGetValue(key, out (ushort CurrentMax, ushort Max) found))
                 return found;
 
             ushort cur = ActionManager.GetMaxCharges(actionID, 0);
@@ -141,8 +143,8 @@ namespace XIVSlothCombo.Data
             if (cooldownGroupCache.TryGetValue(actionID, out byte cooldownGroup))
                 return cooldownGroup;
 
-            var sheet = Service.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()!;
-            var row = sheet.GetRow(actionID);
+            LuminaSheets.ExcelSheet<LuminaAction> sheet = Service.DataManager.GetExcelSheet<LuminaAction>()!;
+            LuminaAction? row = sheet.GetRow(actionID);
 
             return cooldownGroupCache[actionID] = row!.CooldownGroup;
         }
