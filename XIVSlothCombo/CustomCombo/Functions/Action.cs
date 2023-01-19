@@ -67,7 +67,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
                 default:
                     return GetTargetDistance() <= range;
             }
-        } 
+        }
 
         /// <summary> Returns the level of a trait. </summary>
         /// <param name="id"> ID of the action. </param>
