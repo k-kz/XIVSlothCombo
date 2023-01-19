@@ -394,7 +394,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Requiescat) &&
                             Requiescat.LevelChecked() && IsOffCooldown(Requiescat) &&
                             CanWeave(actionID) &&
-                            (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
+                            ((!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15) || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
                             !ActionWatching.WasLast2ActionsAbilities())
                             return OriginalHook(Requiescat);
 
@@ -402,7 +402,7 @@ namespace XIVSlothCombo.Combos.PvE
                             CircleOfScorn.LevelChecked() &&
                             IsOffCooldown(CircleOfScorn) &&
                             CanWeave(actionID) &&
-                            (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
+                            ((!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15) || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
                             !ActionWatching.WasLast2ActionsAbilities())
                             return OriginalHook(CircleOfScorn);
 
@@ -410,7 +410,7 @@ namespace XIVSlothCombo.Combos.PvE
                             OriginalHook(SpiritsWithin).LevelChecked() &&
                             IsOffCooldown(OriginalHook(SpiritsWithin)) &&
                             CanWeave(actionID) &&
-                            (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
+                            ((!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15) || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
                             !ActionWatching.WasLast2ActionsAbilities())
                             return OriginalHook(SpiritsWithin);
 
@@ -425,7 +425,7 @@ namespace XIVSlothCombo.Combos.PvE
                             IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF))
                             return OriginalHook(GoringBlade);
 
-                        if (((IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Confiteor) &&
+                        if ((IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Confiteor) &&
                             Confiteor.LevelChecked() &&
                             HasEffect(Buffs.ConfiteorReady))
                             ||
@@ -433,7 +433,7 @@ namespace XIVSlothCombo.Combos.PvE
                             BladeOfFaith.LevelChecked() &&
                             HasEffect(Buffs.Requiescat) &&
                             OriginalHook(Confiteor) != Confiteor &&
-                            GetResourceCost(OriginalHook(Confiteor)) <= LocalPlayer.CurrentMp)))
+                            GetResourceCost(OriginalHook(Confiteor)) <= LocalPlayer.CurrentMp))
                             return OriginalHook(Confiteor);
 
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
@@ -516,8 +516,8 @@ namespace XIVSlothCombo.Combos.PvE
                                 return OriginalHook(Confiteor);
                         }
 
-                        if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_HolyCircle) && 
-                            (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) && 
+                        if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_HolyCircle) &&
+                            (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) &&
                             GetResourceCost(HolyCircle) <= LocalPlayer.CurrentMp &&
                             HolyCircle.LevelChecked())
                             return OriginalHook(HolyCircle);
@@ -536,7 +536,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Requiescat) &&
                         Requiescat.LevelChecked() && IsOffCooldown(Requiescat) &&
                         CanWeave(actionID) &&
-                        (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF)) &&
+                        ((!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15) || IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF)) &&
                         !ActionWatching.WasLast2ActionsAbilities())
                         return OriginalHook(Requiescat);
 
@@ -544,7 +544,7 @@ namespace XIVSlothCombo.Combos.PvE
                         CircleOfScorn.LevelChecked() &&
                         IsOffCooldown(CircleOfScorn) &&
                         CanWeave(actionID) &&
-                        (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF)) &&
+                        ((!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15) || IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF)) &&
                         !ActionWatching.WasLast2ActionsAbilities())
                         return OriginalHook(CircleOfScorn);
 
@@ -552,7 +552,7 @@ namespace XIVSlothCombo.Combos.PvE
                         OriginalHook(SpiritsWithin).LevelChecked() &&
                         IsOffCooldown(OriginalHook(SpiritsWithin)) &&
                         CanWeave(actionID) &&
-                        (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF)) &&
+                        ((!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15) || IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF)) &&
                         !ActionWatching.WasLast2ActionsAbilities())
                         return OriginalHook(SpiritsWithin);
 
@@ -587,7 +587,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Requiescat)
                 {
-                    var choice = GetOptionValue(Config.PLD_RequiescatOption);
+                    int choice = GetOptionValue(Config.PLD_RequiescatOption);
 
                     if ((choice == 1 || choice == 3) && HasEffect(Buffs.ConfiteorReady) && Confiteor.LevelChecked() && GetResourceCost(Confiteor) <= LocalPlayer.CurrentMp)
                         return OriginalHook(Confiteor);
@@ -615,7 +615,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == OriginalHook(SpiritsWithin))
                 {
-                    var choice = GetOptionValue(Config.PLD_SpiritsWithinOption);
+                    int choice = GetOptionValue(Config.PLD_SpiritsWithinOption);
 
                     if (choice == 1 && IsOffCooldown(CircleOfScorn) && CircleOfScorn.LevelChecked() && IsOffCooldown(OriginalHook(SpiritsWithin)))
                         return OriginalHook(CircleOfScorn);
